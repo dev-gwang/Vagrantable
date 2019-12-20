@@ -1,48 +1,44 @@
 <template>
   <div>
     <div class="title">Information</div>
-    <div class="items">
-      <div class="item">
-        <div class="name">Path:</div>
-        <div class="value">{{ path }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Route Name:</div>
-        <div class="value">{{ name }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Vue.js:</div>
-        <div class="value">{{ vue }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Electron:</div>
-        <div class="value">{{ electron }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Node:</div>
-        <div class="value">{{ node }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Platform:</div>
-        <div class="value">{{ platform }}</div>
-      </div>
-    </div>
+    <table border="1" style="border-collapse:collapse;width=100%">
+        <tr v-for="post in posts">
+            <td v-html="post.state">{{post.state}}</td>
+            <td>{{post.local_data_path}}</td>
+            <td>{{post.extra_data.box.name}}</td>
+            <td>{{post.extra_data.box.provider}}</td>
+            <td>{{post.extra_data.box.version}}</td>
+            <td>{{post.extra_data.box.version}}</td>
+        </tr>
+    </table>
   </div>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        electron: process.versions.electron,
-        name: this.$route.name,
-        node: process.versions.node,
-        path: this.$route.path,
-        platform: require('os').platform(),
-        vue: require('vue/package.json').version
-      }
+export default {
+  name: 'app',
+  data () {
+    return {
+      posts: []
     }
+  },
+  created () {
+    const exec = require('child_process').exec
+    exec('cat d:/.vagrant/data/machine-index/index', (stdout, stderr) => {
+      var jsonParse = stderr.split('\n').join('<br />')
+        .split('running').join('<font color=blue>running</font>')
+        .split('poweroff').join('<font color=red>poweroff</font>')
+      this.posts = JSON.parse(jsonParse)['machines']
+      console.log(jsonParse)
+    })
+    // const exec = require('child_process').exec
+    // exec('vagrant global-status', (stdout, stderr) => {
+    //   this.posts = stderr.split('\n').join('<br />')
+    //     .split('running').join('<font color=blue>running</font>')
+    //     .split('poweroff').join('<font color=red>poweroff</font>')
+    // })
   }
+}
 </script>
 
 <style scoped>
