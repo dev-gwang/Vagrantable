@@ -10,6 +10,6 @@
 
 <script>
   export default {
-    name: 'menu'
+    name: 'app'
   }
 </script>
