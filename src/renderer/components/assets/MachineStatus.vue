@@ -8,12 +8,12 @@
           <div class="md-subhead">{{vagrant_id}}</div>
         </md-card-header-text>
       </md-card-header>
-      <md-card-actions>
+      <!-- <md-card-actions>
         <md-button v-on:click="configure(vagrant_id)">설정</md-button>
         <md-button v-on:click="start(vagrant_id)">켜기</md-button>
         <md-button v-on:click="stop(vagrant_id)">끄기</md-button>
         <md-button>재시작</md-button>
-      </md-card-actions>
+      </md-card-actions> -->
     </md-card>
   </div>
 </template>
@@ -44,6 +44,8 @@ export default {
 
         if (error !== null) {
           getId.style.backgroundColor = 'red'
+          EventBus.$emit('addLogger', stderr)
+
           console.log('exec error: ' + error)
         }
       })
