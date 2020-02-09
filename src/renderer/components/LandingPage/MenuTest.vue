@@ -1,12 +1,16 @@
   
 <template>
-  <div class="page-container" style="width:350px;">
-    <span class="title">Vagrant Machine List
+  <div class="page-container" style="width:350px;background-color:#EEEEEE
+;">
+    <span class="title" style="color:black;">Vagrant Machine List
       <md-button class="md-raised" v-on:click="start(1)">추가하기</md-button>
     </span>
+    <div style="overflow:auto;height:90vh;">
       <md-list v-for="post, key in posts">
         <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status>
       </md-list>
+    </div>
+      
   </div>
 </template>
 
@@ -23,12 +27,9 @@ export default {
   components: { MenuStatus },
   methods: {
     start: function (id) {
-      EventBus.$emit('swapComponent', 'new-machine')
+      EventBus.$emit('swapComponent', 'new-machine', id)
     },
     stop: function (id) {
-      alert(id)
-    },
-    configure: function (id) {
       alert(id)
     }
   },
@@ -38,13 +39,29 @@ export default {
     }
   },
   created () {
+    EventBus.$on('removeVM', (payload) => {
+      this.$forceUpdate()
+      delete this.posts[payload]
+    })
+
+    EventBus.$on('refreshVM', () => {
+      const exec = require('child_process').exec
+      exec('cat d:/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
+        var jsonParse = stderr.split('\n').join('<br />')
+        jsonParse = replaceAll(jsonParse, 'running', 'background-color:green;color:white;')
+        jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
+        this.posts = JSON.parse(jsonParse)['machines']
+        console.log('TEST : ' + Object.keys(this.posts))
+      })
+    })
+
     const exec = require('child_process').exec
-    exec('cat ~/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
+    exec('cat d:/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
       jsonParse = replaceAll(jsonParse, 'running', 'background-color:green;color:white;')
       jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
       this.posts = JSON.parse(jsonParse)['machines']
-      console.log(Object.keys(this.posts))
+      console.log('TEST : ' + Object.keys(this.posts))
     })
   }
 }
