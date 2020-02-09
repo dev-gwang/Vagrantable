@@ -1,15 +1,27 @@
+  
 <template>
   <div>
-    <md-content class="md-scrollbar">
-      <p>Autem enim asperiores consequuntur neque sequi ea similique ex maxime, repudiandae doloremque aliquam exercitationem omnis assumenda. Rem suscipit pariatur vero facere?</p>
-      <p>Necessitatibus aut cumque sit ad. Tempora perferendis nostrum, in assumenda accusantium vitae vero pariatur sapiente nam quisquam, ducimus distinctio quae nisi.</p>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed perspiciatis sit quaerat molestiae iusto adipisci possimus cum modi quam qui esse vero provident, ad, deserunt laborum quas eligendi beatae quibusdam.</p>
-    </md-content>
+    <div>Snapshot Lists</div>
+    <pre>
+      <li v-for="key in SnapshotList.slice(1)">{{key}}</li>
+    </pre>
   </div>
 </template>
 
 <script>
+  import EventBus from '../../store/eventBus'
+
   export default {
-    name: 'menu'
+    name: 'menu',
+    data () {
+      return {
+        SnapshotList: []
+      }
+    },
+    created () {
+      EventBus.$on('addSnapshot', (payload) => {
+        this.SnapshotList = payload.split('\n')
+      })
+    }
   }
 </script>

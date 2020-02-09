@@ -5,20 +5,37 @@
         <span class="title">
           Welcome to your new project!
         </span>
-        <menu></menu>
-        <system-information></system-information>
+        <menu-test></menu-test>
       </div>
+      <span style="width:100%;">
+        <system-information style="height:150%;"></system-information>
+        <pre class="md-scrollbar" style="height:200px;overflow:scroll;">
+          {{Logger}}
+        </pre>
+      </span>
     </main>
   </div>
 </template>
 
 <script>
   import SystemInformation from './LandingPage/SystemInformation'
-  import Menu from './LandingPage/Menu'
+  import MenuTest from './LandingPage/MenuTest'
+  import MachineStatus from './assets/MachineStatus'
+  import EventBus from '../store/eventBus'
 
   export default {
     name: 'landing-page',
-    components: { Menu, SystemInformation },
+    components: { MenuTest, SystemInformation, MachineStatus },
+    data () {
+      return {
+        Logger: []
+      }
+    },
+    created () {
+      EventBus.$on('addLogger', (payload) => {
+        this.Logger += payload
+      })
+    },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
@@ -46,7 +63,7 @@
         rgba(229, 229, 229, .9) 100%
       );
     height: 100vh;
-    padding: 60px 80px;
+    padding: 5px 5px;
     width: 100%;
   }
 
