@@ -1,21 +1,24 @@
 <template>
-  <div id="wrapper">
-    <main>
-      <div>
+  <div id="wrapper" style="height:100vh;">
+    <main >
+      <div style="height:80vh;">
         <menu-test></menu-test>
       </div>
-      <span style="width:100%;">
-        <div :is="currentComponent" :swap-component="swapComponent"></div>
+      <div style="width:100%;height:30vh;">
+        <div style="min-height: 60vh;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
         <!-- <system-information style="height:150%;"></system-information> -->
-        <pre class="md-scrollbar" style="height:150px;overflow:scroll;">
-          {{Logger}}
-        </pre>
-      </span>
+        <table border=1 style="width:100%;height:200px;bottom:0;position: fixed;bottom:0;">
+          <tr>
+            <pre style="overflow:auto;height:100%">{{Logger}}</pre>
+          </tr>
+        </table>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
+  import Information from './LandingPage/Information'
   import SystemInformation from './LandingPage/SystemInformation'
   import MenuTest from './LandingPage/MenuTest'
   import MachineStatus from './assets/MachineStatus'
@@ -24,18 +27,23 @@
 
   export default {
     name: 'landing-page',
-    components: { MenuTest, SystemInformation, MachineStatus, NewMachine },
+    components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information },
     data () {
       return {
-        currentComponent: '',
-        Logger: []
+        currentComponent: 'information',
+        Logger: ''
       }
     },
     created () {
       EventBus.$on('addLogger', (payload) => {
         this.Logger += payload
       })
-      EventBus.$on('swapComponent', (name) => {
+      EventBus.$on('SetSystemInformation', (name, id) => {
+        EventBus.$emit('setInform', name, id)
+        this.currentComponent = 'system-information'
+        this.currentComponent.name = ' name'
+      })
+      EventBus.$on('swapComponent', (name, id) => {
         this.currentComponent = name
       })
     },
@@ -66,7 +74,6 @@
         rgba(229, 229, 229, .9) 100%
       );
     height: 100vh;
-    padding: 5px 5px;
     width: 100%;
   }
 
