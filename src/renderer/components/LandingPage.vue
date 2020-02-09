@@ -2,14 +2,12 @@
   <div id="wrapper">
     <main>
       <div>
-        <span class="title">
-          Welcome to your new project!
-        </span>
         <menu-test></menu-test>
       </div>
       <span style="width:100%;">
-        <system-information style="height:150%;"></system-information>
-        <pre class="md-scrollbar" style="height:200px;overflow:scroll;">
+        <div :is="currentComponent" :swap-component="swapComponent"></div>
+        <!-- <system-information style="height:150%;"></system-information> -->
+        <pre class="md-scrollbar" style="height:150px;overflow:scroll;">
           {{Logger}}
         </pre>
       </span>
@@ -22,18 +20,23 @@
   import MenuTest from './LandingPage/MenuTest'
   import MachineStatus from './assets/MachineStatus'
   import EventBus from '../store/eventBus'
+  import NewMachine from './LandingPage/NewMachine'
 
   export default {
     name: 'landing-page',
-    components: { MenuTest, SystemInformation, MachineStatus },
+    components: { MenuTest, SystemInformation, MachineStatus, NewMachine },
     data () {
       return {
+        currentComponent: '',
         Logger: []
       }
     },
     created () {
       EventBus.$on('addLogger', (payload) => {
         this.Logger += payload
+      })
+      EventBus.$on('swapComponent', (name) => {
+        this.currentComponent = name
       })
     },
     methods: {
