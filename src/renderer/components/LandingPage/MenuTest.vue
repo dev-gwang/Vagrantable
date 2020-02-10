@@ -1,12 +1,17 @@
   
 <template>
-  <div class="page-container" style="width:350px;background-color:#EEEEEE
-;">
-    <span class="title" style="color:black;">Vagrant Machine List
+  <div class="page-container" style="width:350px;background-color:#1E88E5
+;height:100%;">
+    <div style="height:100px;">
+      <vnt-header style="color:white;">
+        <span slot="subheader">
+          Vagrant Tools
+        </span>
+      </vnt-header>
       <md-button class="md-raised" v-on:click="start(1)">추가하기</md-button>
-    </span>
-    <div style="overflow:auto;height:90vh;">
-      <md-list v-for="post, key in posts">
+    </div>
+    <div style="overflow:scroll;height:90%;min-height:80%;">
+      <md-list  v-for="post, key in posts">
         <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status>
       </md-list>
     </div>
@@ -23,10 +28,25 @@ function replaceAll (str, searchStr, replaceStr) {
 }
 
 export default {
-  name: 'app',
   components: { MenuStatus },
   methods: {
+    GetBoxLists: function () {
+      var exec = require('child_process').exec
+      var arr = []
+
+      exec('vagrant box list', function (error, stdout, stderr) {
+        arr = stdout.split('\n')
+        for (var i = 0; i < arr.length; i++) {
+          arr[i] = { label: arr[i].split(' ')[0], value: arr[i].split(' ')[0] }
+        }
+        if (error !== null) {
+          console.log(error)
+        }
+        EventBus.$emit('SetBoxList', arr)
+      })
+    },
     start: function (id) {
+      this.GetBoxLists()
       EventBus.$emit('swapComponent', 'new-machine', id)
     },
     stop: function (id) {
