@@ -24,7 +24,6 @@ var child = ''
 console.log(child)
 
 export default {
-  name: 'app',
   props: ['value', 'vagrant_id'],
   // 메소드는 `methods` 객체 안에 정의합니다
   methods: {
