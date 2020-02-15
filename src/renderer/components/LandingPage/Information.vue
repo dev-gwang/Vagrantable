@@ -6,7 +6,7 @@
       <md-input v-model="location" id="location"></md-input>
     </md-field>
     <md-field md-inline>
-      <label>Vagrant 가상머신 Box 이름</label>
+      <label>Vagrant Box Lists</label>
       <md-input v-model="boxname" id="boxname"></md-input>
     </md-field>
     <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile 생성</md-button>

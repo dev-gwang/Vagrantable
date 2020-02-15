@@ -1,12 +1,14 @@
 <template>
   <div id="wrapper" >
-    <main style="height:98%;">
-      <div>
-        <menu-test></menu-test>
-      </div>
-      <div style="width:100%">
-        <div style="height:70%;width:100%;overflow:scroll;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
-        <pre style="height:30%;width:100%;overflow:scroll;" id="logger" >{{Logger}}</pre>
+    <main style="height:100%;width:100%;">
+      <div class="row" style="height:100%;width:100%;">
+        <div class="col-xs-6">
+          <menu-test></menu-test>
+        </div>
+        <div  style="margin-top:2%;width:75%;">
+          <div class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
+          <pre style="height:30%;width:100%;overflow:scroll;" id="logger" >{{Logger}}</pre>
+        </div>
       </div>
     </main>
   </div>
@@ -51,7 +53,15 @@
   }
 </script>
 
+<style lang="scss" scoped>
+  .md-content {
+    max-width: 400px;
+    max-height: 200px;
+    overflow: auto;
+  }
+</style>
 <style>
+
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {
@@ -64,7 +74,7 @@
     background:
       radial-gradient(
         ellipse at top left,
-        rgba(255, 255, 255, 1) 40%,
+        rgba(255, 255, 255, 1) 100%,
         rgba(229, 229, 229, .9) 100%
       );
     height: 100%;

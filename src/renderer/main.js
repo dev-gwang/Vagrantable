@@ -11,8 +11,17 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vuent/dist/vuent.min.css'
 
-Vue.use(Vuent)
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// app.js
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
 Vue.use(VueMaterial)
+Vue.use(Vuent)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
