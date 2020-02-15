@@ -1,17 +1,14 @@
 <template>
-  <div id="wrapper" style="height:100vh;">
-    <main >
-      <div style="height:80vh;">
-        <menu-test></menu-test>
-      </div>
-      <div style="width:100%;height:30vh;">
-        <div style="min-height: 60vh;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
-        <!-- <system-information style="height:150%;"></system-information> -->
-        <table border=1 style="width:100%;height:200px;bottom:0;position: fixed;bottom:0;">
-          <tr>
-            <pre style="overflow:auto;height:100%">{{Logger}}</pre>
-          </tr>
-        </table>
+  <div id="wrapper" >
+    <main style="height:100%;width:100%;">
+      <div class="row" style="height:100%;width:100%;">
+        <div class="col-xs-6">
+          <menu-test></menu-test>
+        </div>
+        <div  style="margin-top:2%;width:75%;">
+          <div class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
+          <pre style="height:30%;width:100%;overflow:scroll;" id="logger" >{{Logger}}</pre>
+        </div>
       </div>
     </main>
   </div>
@@ -30,13 +27,14 @@
     components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information },
     data () {
       return {
-        currentComponent: 'information',
+        currentComponent: 'new-machine',
         Logger: ''
       }
     },
     created () {
       EventBus.$on('addLogger', (payload) => {
         this.Logger += payload
+        document.getElementById('logger').scrollTo(0, document.getElementById('logger').scrollHeight)
       })
       EventBus.$on('SetSystemInformation', (name, id) => {
         EventBus.$emit('setInform', name, id)
@@ -55,7 +53,15 @@
   }
 </script>
 
+<style lang="scss" scoped>
+  .md-content {
+    max-width: 400px;
+    max-height: 200px;
+    overflow: auto;
+  }
+</style>
 <style>
+
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {
@@ -64,16 +70,14 @@
     padding: 0;
   }
 
-  body { font-family: 'Source Sans Pro', sans-serif; }
-
   #wrapper {
     background:
       radial-gradient(
         ellipse at top left,
-        rgba(255, 255, 255, 1) 40%,
+        rgba(255, 255, 255, 1) 100%,
         rgba(229, 229, 229, .9) 100%
       );
-    height: 100vh;
+    height: 100%;
     width: 100%;
   }
 

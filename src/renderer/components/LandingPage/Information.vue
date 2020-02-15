@@ -1,13 +1,12 @@
   
 <template>
-  <div class="page-container" style="width:350px;padding:1%;">
+  <div class="page-container">
     <meta charset="UTF-8" />
     <md-field md-inline>
-    
       <md-input v-model="location" id="location"></md-input>
     </md-field>
     <md-field md-inline>
-      <label>Vagrant 가상머신 Box 이름</label>
+      <label>Vagrant Box Lists</label>
       <md-input v-model="boxname" id="boxname"></md-input>
     </md-field>
     <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile 생성</md-button>
@@ -30,7 +29,6 @@ function replaceAll (str, searchStr, replaceStr) {
 }
 
 export default {
-  name: 'app',
   components: { MenuStatus },
   methods: {
     Save: function () {
@@ -57,18 +55,6 @@ export default {
       child.stderr.on('data', (data) => {
         EventBus.$emit('addLogger', data)
       })
-    },
-    VagrantFileGenerator: function () {
-      // var fs = require('fs')
-      var vagrantfile = `
-    # -*- mode: ruby -*-
-    # vi: set ft=ruby :
-
-    Vagrant.configure("2") do |config|
-      config.vm.box = "${this.boxname}"
-    end`
-
-      this.Vagrantfile = vagrantfile
     }
   },
   data () {

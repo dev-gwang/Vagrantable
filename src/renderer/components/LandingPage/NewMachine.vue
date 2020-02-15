@@ -1,36 +1,86 @@
   
 <template>
-  <div class="page-container" style="width:350px;padding:1%;">
+  <div class="page-container" style="width:100%;padding-left:1%;background-color:white;">
     <meta charset="UTF-8" />
-    <vnt-header>
-      추가하기
-    </vnt-header>
+   
     <span>
-      <vnt-input v-model="location" label="가상머신 경로" placeholder="Type message here"></vnt-input>
-      <vnt-input v-model="boxname" label="Vagrant 가상머신 Box 이름" placeholder="Type message here"></vnt-input>
-    </span>
+      <table style="width:100%;align-text:top;">
+        <tr>
+          <td style="width:60%;">
+            <b-card style="padding:1%;">
+                    <div>
+  <b-button>Button</b-button>
+  <b-button variant="danger">Button</b-button>
+  <b-button variant="success">Button</b-button>
+  <b-button variant="outline-primary">Button</b-button>
+</div>
+              <vnt-header>
+                <h5>
+                  Basic
+                </h5>
+              </vnt-header>
+              <div>
+                Vagrant Location
+                <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
+              </div>
+              <div>
+                Vagrant Box Lists  <strong>{{ boxname }}</strong>
+                <b-form-select style="border-color: black;" v-model="boxname" :options="countries" size="sm" class="mt-3"></b-form-select>
+              </div>
+              <vnt-header>
+                <h5>
+                  Network
+                </h5>
+              </vnt-header>
+              <div>
+                Network Type
+                <b-form-select style="border-color: black;" v-model="network" :options="network_type">
+                  {{network}}
+                </b-form-select>
+                Network IP
+                <b-form-input style="border-color: black;" v-model="network_ip" placeholder="Enter IP"></b-form-input>
+                Network Bridge
+                <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
+              </div>
+                <b-card style="border : 1px solid gray;height:100%;">
+                <label>Shell Code (Bash)</label>
+                <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
+      max-rows="6"></b-form-textarea>
+                </b-card>
+            </b-card>
+          </td>
+          <td style="width:40%;height:100%;vertical-align:top;">
+             
+            <b-card style="padding:1%;height:100%;" rows="30"
+      max-rows="6">
+              <vnt-header>
+                <h5>
+                  Vagrantfile
+                </h5>
+              </vnt-header>
+                   <label>Textarea</label>
+      <b-form-textarea  style="height:100%;" md-counter="80" v-model="Vagrantfile" rows="17"
+      max-rows="6">{{Vagrantfile}}</b-form-textarea>
+            <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile Generate</md-button>
+                </b-card>
+
+          </td>
+        </tr>
+      </table>
     
-    <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile 생성</md-button>
-    <md-field>
-      <label>Textarea</label>
-      <md-textarea md-counter="80" v-model="Vagrantfile">{{Vagrantfile}}</md-textarea>
-    </md-field>
-    <md-button class="md-raised" v-on:click="Save()">저장</md-button>
+  
+    <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
+    </span>
   </div>
 </template>
 
 <script>
 import MenuStatus from '../assets/MachineStatus'
 import EventBus from '../../store/eventBus'
-// var exec = require('child_process').exec
+
 var spawn = require('child_process').spawn
 
-function replaceAll (str, searchStr, replaceStr) {
-  return str.split(searchStr).join(replaceStr)
-}
-
 export default {
-  name: 'app',
   components: { MenuStatus },
   methods: {
     Save: function () {
@@ -38,14 +88,19 @@ export default {
       try {
         fs.statSync(this.location)
         console.log('file or directory exists')
+        fs.unlink(this.location + '/Vagrantfile', (err) => {
+          if (err) {
+            console.error(err)
+          }
+        })
+        fs.writeFile(this.location + '/Vagrantfile', this.Vagrantfile, 'utf8', function (error) {
+          console.log(error)
+        })
       } catch (err) {
         if (err.code === 'ENOENT') {
           fs.mkdir(this.location)
           console.log('file or directory does not exist')
         }
-        fs.writeFile(this.location + '/Vagrantfile', this.Vagrantfile, 'utf8', function (error) {
-          console.log(error)
-        })
       }
       process.chdir(this.location)
       var child = spawn('vagrant', ['up'])
@@ -66,51 +121,41 @@ export default {
 
     Vagrant.configure("2") do |config|
       config.vm.box = "${this.boxname}"
-    end'`
+      config.vm.network "${this.network}", ip: "${this.network_ip}", bridge: "${this.network_bridge}"
+      config.vm.provision "shell", inline: <<-SHELL
+        ${this.BashCode}
+      SHELL
+    end`
 
       this.Vagrantfile = vagrantfile
+    },
+    SetBoxList: function (list) {
+      this.countries = list
     }
   },
   data () {
     return {
-      posts: [],
+      BashCode: '',
+      network: '',
+      network_type: [
+        {
+          text: 'public_network', value: 'public_network'
+        },
+        {
+          text: 'private_network', value: 'private_network'
+        }
+      ],
+      countries: [],
       Vagrantfile: '',
       aaa: 'bbbb',
-      location: ''
+      location: '',
+      boxname: ''
     }
   },
   created () {
-    const exec = require('child_process').exec
-    exec('cat ~/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
-      var jsonParse = stderr.split('\n').join('<br />')
-      jsonParse = replaceAll(jsonParse, 'running', 'background-color:green;color:white;')
-      jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
-      this.posts = JSON.parse(jsonParse)['machines']
-      console.log(Object.keys(this.posts))
+    EventBus.$on('SetBoxList', (payload) => {
+      this.countries = payload
     })
   }
 }
 </script>
-
-<style scoped>
-  .title {
-    color: #888;
-    font-size: 18px;
-    font-weight: initial;
-    letter-spacing: .25px;
-    margin-top: 10px;
-  }
-  .items { margin-top: 8px; }
-  .item {
-    display: flex;
-    margin-bottom: 6px;
-  }
-  .item .name {
-    color: #6a6a6a;
-    margin-right: 6px;
-  }
-  .item .value {
-    color: #35495e;
-    font-weight: bold;
-  }
-</style>

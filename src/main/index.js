@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+const path = require('path')
 
 /**
  * Set `__static` path to static files in production
@@ -20,10 +21,17 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000,
-    autoHideMenuBar: true
+    minWidth: 1000,
+    minHeight: 1000,
+    height: 1000,
+    width: 1500,
+    autoHideMenuBar: true,
+    titleBarStyle: 'customButtonsOnHover',
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
+    },
+    frame: false
   })
   mainWindow.loadURL(winURL)
 
