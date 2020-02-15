@@ -1,39 +1,76 @@
   
 <template>
-  <div class="page-container" style="width:350px;padding-left:1%;">
+  <div class="page-container" style="width:100%;padding-left:1%;background-color:white;">
     <meta charset="UTF-8" />
-    <vnt-header>
-      <span slot="subheader">
-        추가하기
-      </span>
-    </vnt-header>
+   
     <span>
-      <vnt-input style="width:100%" v-model="location" label="가상머신 경로" placeholder="Type message here"></vnt-input>
-      <div class="md-layout-item" style="background-color:white;">
-        가상머신 Box
-        <vnt-select v-model="boxname" :options="countries">
-          {{boxname}}
-        </vnt-select>
-      </div>
+      <table style="width:100%;align-text:top;">
+        <tr>
+          <td style="width:60%;">
+            <b-card style="padding:1%;">
+                    <div>
+  <b-button>Button</b-button>
+  <b-button variant="danger">Button</b-button>
+  <b-button variant="success">Button</b-button>
+  <b-button variant="outline-primary">Button</b-button>
+</div>
+              <vnt-header>
+                <h5>
+                  Basic
+                </h5>
+              </vnt-header>
+              <div>
+                Vagrant Location
+                <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
+              </div>
+              <div>
+                Vagrant Box Lists  <strong>{{ boxname }}</strong>
+                <b-form-select style="border-color: black;" v-model="boxname" :options="countries" size="sm" class="mt-3"></b-form-select>
+              </div>
+              <vnt-header>
+                <h5>
+                  Network
+                </h5>
+              </vnt-header>
+              <div>
+                Network Type
+                <b-form-select style="border-color: black;" v-model="network" :options="network_type">
+                  {{network}}
+                </b-form-select>
+                Network IP
+                <b-form-input style="border-color: black;" v-model="network_ip" placeholder="Enter IP"></b-form-input>
+                Network Bridge
+                <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
+              </div>
+                <b-card style="border : 1px solid gray;height:100%;">
+                <label>Shell Code (Bash)</label>
+                <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
+      max-rows="6"></b-form-textarea>
+                </b-card>
+            </b-card>
+          </td>
+          <td style="width:40%;height:100%;vertical-align:top;">
+             
+            <b-card style="padding:1%;height:100%;" rows="30"
+      max-rows="6">
+              <vnt-header>
+                <h5>
+                  Vagrantfile
+                </h5>
+              </vnt-header>
+                   <label>Textarea</label>
+      <b-form-textarea  style="height:100%;" md-counter="80" v-model="Vagrantfile" rows="17"
+      max-rows="6">{{Vagrantfile}}</b-form-textarea>
+            <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile Generate</md-button>
+                </b-card>
+
+          </td>
+        </tr>
+      </table>
+    
+  
+    <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
     </span>
-    네트워크 설정
-    <li> 네트워크 종류
-      <vnt-select v-model="network" :options="network_type">
-        {{network}}
-      </vnt-select>
-      <vnt-input style="width:100%" v-model="network_ip" label="네트워크 IP" placeholder="Type message here"></vnt-input>
-      <vnt-input style="width:100%" v-model="network_bridge" label="네트워크 Bridge" placeholder="Type message here"></vnt-input>
-    </li>
-    <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile 생성</md-button>
-    <md-field>
-      <label>Shell Code (Bash)</label>
-      <md-textarea md-counter="1000" v-model="BashCode"></md-textarea>
-    </md-field>
-    <md-field>
-      <label>Textarea</label>
-      <md-textarea md-counter="80" v-model="Vagrantfile">{{Vagrantfile}}</md-textarea>
-    </md-field>
-    <md-button class="md-raised" v-on:click="Save()">저장</md-button>
   </div>
 </template>
 
@@ -102,10 +139,10 @@ export default {
       network: '',
       network_type: [
         {
-          label: 'public_network', value: 'public_network'
+          text: 'public_network', value: 'public_network'
         },
         {
-          label: 'private_network', value: 'private_network'
+          text: 'private_network', value: 'private_network'
         }
       ],
       countries: [],
@@ -122,26 +159,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .title {
-    color: #888;
-    font-size: 18px;
-    font-weight: initial;
-    letter-spacing: .25px;
-    margin-top: 10px;
-  }
-  .items { margin-top: 8px; }
-  .item {
-    display: flex;
-    margin-bottom: 6px;
-  }
-  .item .name {
-    color: #6a6a6a;
-    margin-right: 6px;
-  }
-  .item .value {
-    color: #35495e;
-    font-weight: bold;
-  }
-</style>
