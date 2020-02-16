@@ -67,7 +67,7 @@ export default {
   },
   created () {
     const exec = require('child_process').exec
-    exec('cat ~/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
+    exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
       jsonParse = replaceAll(jsonParse, 'running', 'background-color:green;color:white;')
       jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')

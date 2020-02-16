@@ -8,18 +8,27 @@
           Vagrant Tools
         </span>
       </vnt-header>
-      <div>
-  <b-button>Button</b-button>
-  <b-button variant="danger">Button</b-button>
-  <b-button variant="success">Button</b-button>
-  <b-button variant="outline-primary">Button</b-button>
-</div>
-      <b-button  v-on:click="start(1)">NEW</b-button>
+      <md-button style="background-color:white" v-on:click="start(1)">NEW</md-button>
     </div>
     <md-content class="md-scrollbar" style="height:90%;min-height:80%;">
       <md-list  v-for="post, key in posts">
-        <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status>
+        <md-card class="md-primary" :style="post.state" :id="key">
+          <md-card-header>
+            <md-card-header-text>
+              <div v-on:click="inform(post.local_data_path, key)">
+                <div>{{post.local_data_path}}</div>
+                <div class="md-subhead">{{key}}</div>
+              </div>
+            </md-card-header-text>
+          </md-card-header>
+        </md-card>
+        <!-- <menu-status v-bind:value="post" v-bind:vagrant_id="key" ></menu-status> -->
       </md-list>
+      <div style="position:fixed;bottom:0;margin:1%;">
+        <b-button size="sm" class="mb-2" v-on:click="changeConfigure()">
+      <b-icon icon="gear-fill"></b-icon> Settings
+    </b-button>
+      </div>
     </md-content>
       
   </div>
@@ -36,6 +45,12 @@ function replaceAll (str, searchStr, replaceStr) {
 export default {
   components: { MenuStatus },
   methods: {
+    inform: function (name, id) {
+      EventBus.$emit('SetSystemInformation', name, id)
+    },
+    changeConfigure: function () {
+      EventBus.$emit('swapComponent', 'environment-configure', 1)
+    },
     GetBoxLists: function () {
       var exec = require('child_process').exec
       var arr = []
@@ -72,7 +87,7 @@ export default {
 
     EventBus.$on('refreshVM', () => {
       const exec = require('child_process').exec
-      exec('cat d:/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
+      exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
         var jsonParse = stderr.split('\n').join('<br />')
         jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
         jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
@@ -82,7 +97,7 @@ export default {
     })
 
     const exec = require('child_process').exec
-    exec('cat d:/.vagrant.d/data/machine-index/index', (stdout, stderr) => {
+    exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
       jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
       jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
