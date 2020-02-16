@@ -6,12 +6,28 @@
           <menu-test></menu-test>
         </div>
         <div  style="margin-top:2%;width:75%;">
-          <div class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" v-bind="value" :is="currentComponent" :swap-component="swapComponent"></div>
-          <pre style="height:30%;width:100%;overflow:scroll;" id="logger" >{{Logger}}</pre>
+          <div  v-bind:vagrant_id="vagrantId" 
+                v-bind:vagrant_name="vagrantName" 
+                class="md-scrollbar" 
+                style="overflow:auto;height:70%;width:100%;" 
+                :is="currentComponent" 
+                :swap-component="swapComponent"></div>
+          <div>
+            <b-card-body
+                ref="content"
+                style="position:relative; height:300px; overflow-y:scroll;"
+                id="logger"
+            >
+              <pre>
+                {{Logger}}
+              </pre>
+            </b-card-body>
+        </div>
         </div>
       </div>
     </main>
   </div>
+        <!-- <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status> -->
 </template>
 
 <script>
@@ -21,14 +37,17 @@
   import MachineStatus from './assets/MachineStatus'
   import EventBus from '../store/eventBus'
   import NewMachine from './LandingPage/NewMachine'
+  import EnvironmentConfigure from './LandingPage/EnvironmentConfigure'
 
   export default {
     name: 'landing-page',
-    components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information },
+    components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
     data () {
       return {
         currentComponent: 'new-machine',
-        Logger: ''
+        Logger: '',
+        vagrantId: false,
+        vagrantName: ''
       }
     },
     created () {
@@ -37,9 +56,9 @@
         document.getElementById('logger').scrollTo(0, document.getElementById('logger').scrollHeight)
       })
       EventBus.$on('SetSystemInformation', (name, id) => {
-        EventBus.$emit('setInform', name, id)
         this.currentComponent = 'system-information'
-        this.currentComponent.name = ' name'
+        this.vagrantName = name
+        this.vagrantId = id
       })
       EventBus.$on('swapComponent', (name, id) => {
         this.currentComponent = name
@@ -53,13 +72,6 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .md-content {
-    max-width: 400px;
-    max-height: 200px;
-    overflow: auto;
-  }
-</style>
 <style>
 
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');

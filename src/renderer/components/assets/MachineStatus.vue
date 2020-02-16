@@ -28,7 +28,8 @@ export default {
   // 메소드는 `methods` 객체 안에 정의합니다
   methods: {
     inform: function (name, id) {
-      EventBus.$emit('SetSystemInformation', name, id)
+      EventBus.$emit('setInform', name, id)
+      // EventBus.$emit('SetSystemInformation', name, id)
     },
     configure: function (id) {
       child = exec('vagrant snapshot list ' + id, function (error, stdout, stderr) {
