@@ -3,23 +3,21 @@
   <div>
     <div>
       <vnt-header>
-        {{value}}
         <span slot="subheader">
-          {{vagrant_id}}
+        {{vagrant_name}} ({{vagrant_id}})
         </span>
       </vnt-header>
-
-      
+      <hr>
       <br>
-      
     </div>
     <div style="align-text:left;">
       <md-card-actions>
-        <md-button v-on:click="configure(vagrant_id)">설정</md-button>
-        <md-button v-on:click="start(vagrant_id)">켜기</md-button>
-        <md-button v-on:click="stop(vagrant_id)">끄기</md-button>
-        <md-button v-on:click="reload(vagrant_id)">재시작</md-button>
-        <md-button v-on:click="remove(vagrant_id)">삭제</md-button>
+        <md-button v-on:click="configure(vagrant_id)">Config</md-button>
+        <md-button v-on:click="start(vagrant_id)">Up</md-button>
+        <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
+        <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
+        <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
+        <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
       </md-card-actions>
     </div>
     <div>Snapshot Lists</div>
@@ -35,15 +33,31 @@
   var exec = require('child_process').exec
 
   export default {
-    name: 'menu',
-    props: ['value', 'vagrant_id'],
+    props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {
         SnapshotList: []
       }
     },
     methods: {
+      provision: function (id) {
+        var child = spawn('vagrant', ['up', '', id, '--provision'])
+
+        child.stdout.on('data', (data) => {
+          var getId = document.getElementById(id)
+          getId.style.backgroundColor = 'green'
+          getId.style.color = 'white'
+          EventBus.$emit('addLogger', data)
+        })
+        child.stderr.on('data', (data) => {
+          var getId = document.getElementById(id)
+          getId.style.backgroundColor = 'red'
+          getId.style.color = 'white'
+          EventBus.$emit('addLogger', data)
+        })
+      },
       remove: function (id) {
+        alert(id)
         var child = spawn('vagrant', ['destroy', '-f', id])
 
         child.stdout.on('data', (data) => {
@@ -93,22 +107,6 @@
           getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
         })
-        // exec('vagrant up ' + id, function (error, stdout, stderr) {
-        //   var getId = document.getElementById(id)
-        //   EventBus.$emit('addLogger', stdout)
-        //   console.log('stdout: ' + stdout)
-        //   console.log('stderr: ' + stderr)
-
-        //   getId.style.backgroundColor = 'green'
-        //   getId.style.color = 'white'
-
-        //   if (error !== null) {
-        //     getId.style.backgroundColor = 'red'
-        //     EventBus.$emit('addLogger', stderr)
-
-        //     console.log('exec error: ' + error)
-        //   }
-        // })
       },
       stop: function (id) {
         exec('vagrant halt ' + id, function (error, stdout, stderr) {
