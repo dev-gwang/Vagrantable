@@ -1,19 +1,18 @@
   
 <template>
   <div class="page-container" style="width:100%;padding-left:1%;background-color:white;">
+    <vnt-header>
+      <span slot="subheader">
+        NEW
+      </span>
+    </vnt-header>
+    <hr>
     <meta charset="UTF-8" />
-   
     <span>
       <table style="width:100%;align-text:top;">
         <tr>
           <td style="width:60%;">
             <b-card style="padding:1%;">
-                    <div>
-  <b-button>Button</b-button>
-  <b-button variant="danger">Button</b-button>
-  <b-button variant="success">Button</b-button>
-  <b-button variant="outline-primary">Button</b-button>
-</div>
               <vnt-header>
                 <h5>
                   Basic
@@ -26,6 +25,14 @@
               <div>
                 Vagrant Box Lists  <strong>{{ boxname }}</strong>
                 <b-form-select style="border-color: black;" v-model="boxname" :options="countries" size="sm" class="mt-3"></b-form-select>
+              </div>
+              <div>
+                CPUS
+                <b-form-input style="border-color: black;" v-model="cpus" placeholder="Enter CPUs"></b-form-input>
+              </div>
+              <div>
+                Memory (MB)
+                <b-form-input style="border-color: black;" v-model="memory" placeholder="Enter Memory"></b-form-input>
               </div>
               <vnt-header>
                 <h5>
@@ -122,6 +129,10 @@ export default {
     Vagrant.configure("2") do |config|
       config.vm.box = "${this.boxname}"
       config.vm.network "${this.network}", ip: "${this.network_ip}", bridge: "${this.network_bridge}"
+      config.vm.provider "virtualbox" do |vb|
+        vb.memory = ${this.memory}
+        vb.cpus = ${this.cpus}
+      end
       config.vm.provision "shell", inline: <<-SHELL
         ${this.BashCode}
       SHELL
@@ -149,7 +160,9 @@ export default {
       Vagrantfile: '',
       aaa: 'bbbb',
       location: '',
-      boxname: ''
+      boxname: '',
+      memory: 1024,
+      cpus: 1
     }
   },
   created () {
