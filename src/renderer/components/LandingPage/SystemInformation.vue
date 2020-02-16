@@ -24,19 +24,35 @@
     <pre>
       <li v-for="key in SnapshotList.slice(1)">{{key}}</li>
     </pre>
+    {{ports}}
   </div>
 </template>
 
 <script>
   import EventBus from '../../store/eventBus'
+  var childProcess = require('child_process')
   var spawn = require('child_process').spawn
   var exec = require('child_process').exec
+
+  // const ExecCommand = async (command) => {
+  //   await exec(command, function (error, stdout, stderr) {
+  //     if (error !== null) {
+  //       alert(error)
+  //     }
+  //     alert('a')
+  //     alert(stdout)
+  //     return stdout
+  //   })
+  // }
 
   export default {
     props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {
-        SnapshotList: []
+        SnapshotList: [],
+        ports: [
+          { 'guest': 0, 'port': 1 }
+        ]
       }
     },
     methods: {
@@ -122,15 +138,33 @@
             console.log('exec error: ' + error)
           }
         })
+      },
+      init: function () {
+        var ret = childProcess.execSync('vagrant port ' + this.vagrant_id)
+        // var test = await goWork('vagrant port ' + this.vagrant_id)
+        this.ports = ret
+        alert(ret)
+        // exec('vagrant port ' + this.vagrant_id, function (error, stdout, stderr) {
+        //   if (error !== null) {
+        //     alert(error)
+        //   }
+        //   alert('a')
+        //   alert(this.vagrant_id)
+        //   this.ports = stdout
+        //   alert(this.ports)
+        // })
       }
     },
+    // mounted () {
+    //   this.init()
+    // },
     created () {
+      this.init()
+      EventBus.$on('addInform', (id) => {
+        alert(id)
+      })
       EventBus.$on('addSnapshot', (payload) => {
         this.SnapshotList = payload.split('\n')
-      })
-      EventBus.$on('setInform', (payload, id) => {
-        this.value = payload
-        this.vagrant_id = id
       })
     }
   }
