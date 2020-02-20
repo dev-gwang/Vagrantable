@@ -59,6 +59,7 @@
         this.currentComponent = 'system-information'
         this.vagrantName = name
         this.vagrantId = id
+        EventBus.$emit('refreshInform')
       })
       EventBus.$on('swapComponent', (name, id) => {
         this.currentComponent = name
