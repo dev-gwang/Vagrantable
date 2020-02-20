@@ -43,17 +43,15 @@
                     Actions
                   </td>
                 </tr>
-                <md-list  v-for="post, key in SnapshotList">
-                  <tr style="width:100%;">
-                    <td style="width:50%;">
-                      {{post}}
-                    </td>
-                    <td style="width:50%;">
-                      <b-button v-on:click="snapshotRestore(vagrant_id, post)">Snapshot Restore</b-button><br>
-                      <b-button v-on:click="snapshotRemove(vagrant_id, post)">Snapshot Remove</b-button><br>
-                    </td>
-                  </tr>
-                </md-list>
+                <tr v-for="post, key in SnapshotList" style="width:100%;">
+                  <td style="width:50%;">
+                    {{post}}
+                  </td>
+                  <td style="width:50%;">
+                    <b-button v-on:click="snapshotRestore(vagrant_id, post)">Snapshot Restore</b-button>&nbsp&nbsp&nbsp
+                    <b-button v-on:click="snapshotRemove(vagrant_id, post)">Snapshot Remove</b-button><br>
+                  </td>
+                </tr>
               </table>
               </b-card>
             </td>
@@ -86,6 +84,7 @@
     },
     methods: {
       handleOk: function () {
+        var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
 
@@ -93,6 +92,8 @@
           EventBus.$emit('addLogger', stdout)
           console.log('stdout: ' + stdout)
           console.log('stderr: ' + stderr)
+
+          self.snapshotList()
 
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
@@ -102,6 +103,7 @@
         })
       },
       snapshotRemove: function (id, name) {
+        const self = this
         exec(`vagrant snapshot delete ${id} ${name}`, function (error, stdout, stderr) {
           EventBus.$emit('addLogger', stdout)
           console.log('stdout: ' + stdout)
@@ -112,20 +114,17 @@
 
             console.log('exec error: ' + error)
           }
-          this.snapshotList()
+          self.snapshotList()
         })
       },
       snapshotRestore: function (id, name) {
-        exec(`vagrant snapshot restore ${id} ${name}`, function (error, stdout, stderr) {
+        exec(`vagrant snapshot restore ${id} "${name}"`, function (error, stdout, stderr) {
           EventBus.$emit('addLogger', stdout)
-          alert(stdout)
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
-
           if (error !== null) {
-            EventBus.$emit('addLogger', stderr)
-
+            EventBus.$emit('addLogger', `vagrant snapshot restore ${id} ${name} ${stderr}`)
             console.log('exec error: ' + error)
+          } else {
+            EventBus.$emit('addLogger', stdout)
           }
         })
       },
@@ -216,13 +215,19 @@
         this.value = 10
         const self = this
         self.SnapshotList = []
-        childProcess.exec('vagrant snapshot list ' + this.vagrant_id + " | grep -v 'default'", function (error, stdout, stderr) {
+        childProcess.exec('vagrant snapshot list ' + this.vagrant_id, function (error, stdout, stderr) {
           if (error !== null) {
-            alert(error)
+            EventBus.$emit('addLogger', stderr)
           }
           var stdoutArray = stdout.split('\n')
           for (var i = 0; i < stdoutArray.length; i++) {
-            self.SnapshotList.push(stdoutArray[i])
+            var strTemp = stdoutArray[i]
+
+            if (!(strTemp.indexOf('default') >= 0)) {
+              if (strTemp.length > 0) {
+                self.SnapshotList.push(strTemp)
+              }
+            }
           }
           self.value = 100
 
@@ -234,7 +239,7 @@
         const self = this
         childProcess.exec('vagrant port ' + this.vagrant_id + " | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'", function (error, stdout, stderr) {
           if (error !== null) {
-            alert(error)
+            EventBus.$emit('addLogger', stderr)
           }
           var stringTemp = stdout.replace('(guest)', '').replace('(host)', '').replace('\r\n', '')
           self.ports.push(
@@ -247,7 +252,7 @@
         const self = this
         childProcess.exec('vagrant port ' + this.vagrant_id + " | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'", function (error, stdout, stderr) {
           if (error !== null) {
-            alert(error)
+            EventBus.$emit('addLogger', stderr)
           }
           var stringTemp = stdout.replace('(guest)', '').replace('(host)', '').replace('\r\n', '')
           self.ports.push(
