@@ -80,6 +80,8 @@ export default {
     }
   },
   created () {
+    var vagrantHome = (!process.env.VAGRANT_HOME) ? '~/.vagrant.d' : process.env.VAGRANT_HOME
+
     EventBus.$on('removeVM', (payload) => {
       this.$forceUpdate()
       delete this.posts[payload]
@@ -87,7 +89,7 @@ export default {
 
     EventBus.$on('refreshVM', () => {
       const exec = require('child_process').exec
-      exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
+      exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
         var jsonParse = stderr.split('\n').join('<br />')
         jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
         jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
@@ -97,7 +99,7 @@ export default {
     })
 
     const exec = require('child_process').exec
-    exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
+    exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
       jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
       jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
