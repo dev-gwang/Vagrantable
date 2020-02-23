@@ -28,6 +28,10 @@
         <b-button size="sm" class="mb-2" v-on:click="changeConfigure()">
       <b-icon icon="gear-fill"></b-icon> Settings
     </b-button>
+
+        <b-button size="sm" class="mb-2" v-on:click="boxLists()">
+      <b-icon icon="gear-fill"></b-icon> BoxList
+    </b-button>
       </div>
     </md-content>
       
@@ -47,6 +51,9 @@ export default {
   methods: {
     inform: function (name, id) {
       EventBus.$emit('SetSystemInformation', name, id)
+    },
+    boxLists: function () {
+      EventBus.$emit('swapComponent', 'box-list', 1)
     },
     changeConfigure: function () {
       EventBus.$emit('swapComponent', 'environment-configure', 1)

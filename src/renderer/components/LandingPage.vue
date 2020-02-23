@@ -52,7 +52,11 @@
     },
     created () {
       EventBus.$on('addLogger', (payload) => {
-        this.Logger += payload
+        if (payload.indexOf('\n') < 0) {
+          this.Logger += payload + '\n'
+        } else {
+          this.Logger += payload
+        }
         document.getElementById('logger').scrollTo(0, document.getElementById('logger').scrollHeight)
       })
       EventBus.$on('SetSystemInformation', (name, id) => {
