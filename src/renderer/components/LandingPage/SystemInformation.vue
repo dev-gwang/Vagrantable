@@ -19,6 +19,7 @@
           <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
           <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
           <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
+          <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
         </md-card-actions>
       </div>
       <table style="width:100%;align-text:top;">
@@ -83,10 +84,23 @@
       }
     },
     methods: {
+      updateBoxImage (name) {
+        var self = this
+        exec(`vagrant box update ${name} --force`, function (error, stdout, stderr) {
+          if (error !== null) {
+            EventBus.$emit('addLogger', stderr)
+          } else {
+            EventBus.$emit('addLogger', stdout)
+            alert(stdout)
+            self.refreshBoxImage(self)
+          }
+        })
+      },
       handleOk: function () {
         var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
+        EventBus.$emit('addToast', `${this.snapshotName}-${dateString} Snapshot 추가`)
 
         exec(`vagrant snapshot save ${this.vagrant_id} ${this.snapshotName}-${dateString}`, function (error, stdout, stderr) {
           EventBus.$emit('addLogger', stdout)
@@ -104,16 +118,18 @@
       },
       snapshotRemove: function (id, name) {
         const self = this
-        exec(`vagrant snapshot delete ${id} ${name}`, function (error, stdout, stderr) {
-          EventBus.$emit('addLogger', stdout)
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
+        var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', name], {shell: true})
+        EventBus.$emit('addToast', `${name} Snapshot 삭제`)
 
-          if (error !== null) {
-            EventBus.$emit('addLogger', stderr)
+        child.stdout.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
 
-            console.log('exec error: ' + error)
-          }
+        child.stderr.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
           self.snapshotList()
         })
       },

@@ -25,6 +25,9 @@
         </div>
         </div>
       </div>
+      <md-snackbar style="background-color:#263238;" :md-position="position" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
+        <span style="color:white;">{{ message }}</span>
+      </md-snackbar>
     </main>
   </div>
         <!-- <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status> -->
@@ -38,19 +41,33 @@
   import EventBus from '../store/eventBus'
   import NewMachine from './LandingPage/NewMachine'
   import EnvironmentConfigure from './LandingPage/EnvironmentConfigure'
+  import BoxList from './LandingPage/BoxList'
 
   export default {
     name: 'landing-page',
-    components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
+    components: { BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
     data () {
       return {
         currentComponent: 'new-machine',
         Logger: '',
         vagrantId: false,
-        vagrantName: ''
+        vagrantName: '',
+        showSnackbar: false,
+        message: ''
       }
     },
     created () {
+      // let myNotification = new Notification('Title', {
+      //   body: 'Lorem Ipsum Dolor Sit Amet'
+      // })
+
+      // myNotification.onclick = () => {
+      //   console.log('Notification clicked')
+      // }
+      EventBus.$on('addToast', (payload) => {
+        this.message = payload
+        this.showSnackbar = true
+      })
       EventBus.$on('addLogger', (payload) => {
         if (payload.indexOf('\n') < 0) {
           this.Logger += payload + '\n'
