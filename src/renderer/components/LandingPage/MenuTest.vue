@@ -28,6 +28,10 @@
         <b-button size="sm" class="mb-2" v-on:click="changeConfigure()">
       <b-icon icon="gear-fill"></b-icon> Settings
     </b-button>
+
+        <b-button size="sm" class="mb-2" v-on:click="boxLists()">
+      <b-icon icon="gear-fill"></b-icon> BoxList
+    </b-button>
       </div>
     </md-content>
       
@@ -47,6 +51,9 @@ export default {
   methods: {
     inform: function (name, id) {
       EventBus.$emit('SetSystemInformation', name, id)
+    },
+    boxLists: function () {
+      EventBus.$emit('swapComponent', 'box-list', 1)
     },
     changeConfigure: function () {
       EventBus.$emit('swapComponent', 'environment-configure', 1)
@@ -80,6 +87,8 @@ export default {
     }
   },
   created () {
+    var vagrantHome = (!process.env.VAGRANT_HOME) ? '~/.vagrant.d' : process.env.VAGRANT_HOME
+
     EventBus.$on('removeVM', (payload) => {
       this.$forceUpdate()
       delete this.posts[payload]
@@ -87,7 +96,7 @@ export default {
 
     EventBus.$on('refreshVM', () => {
       const exec = require('child_process').exec
-      exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
+      exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
         var jsonParse = stderr.split('\n').join('<br />')
         jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
         jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
@@ -97,7 +106,7 @@ export default {
     })
 
     const exec = require('child_process').exec
-    exec('cat ' + process.env.VAGRANT_HOME + '/data/machine-index/index', (stdout, stderr) => {
+    exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
       jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
       jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
