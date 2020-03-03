@@ -91,6 +91,7 @@ export default {
   components: { MenuStatus },
   methods: {
     Save: function () {
+      EventBus.$emit('addToast', `${this.location} Vagrant 시작`)
       const fs = require('fs')
       try {
         fs.statSync(this.location)

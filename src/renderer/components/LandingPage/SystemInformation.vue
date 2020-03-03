@@ -100,6 +100,7 @@
         var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
+        EventBus.$emit('addToast', `${this.snapshotName}-${dateString} Snapshot 추가`)
 
         exec(`vagrant snapshot save ${this.vagrant_id} ${this.snapshotName}-${dateString}`, function (error, stdout, stderr) {
           EventBus.$emit('addLogger', stdout)
@@ -117,16 +118,18 @@
       },
       snapshotRemove: function (id, name) {
         const self = this
-        exec(`vagrant snapshot delete ${id} ${name}`, function (error, stdout, stderr) {
-          EventBus.$emit('addLogger', stdout)
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
+        var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', name], {shell: true})
+        EventBus.$emit('addToast', `${name} Snapshot 삭제`)
 
-          if (error !== null) {
-            EventBus.$emit('addLogger', stderr)
+        child.stdout.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
 
-            console.log('exec error: ' + error)
-          }
+        child.stderr.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
           self.snapshotList()
         })
       },
