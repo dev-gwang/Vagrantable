@@ -19,6 +19,7 @@
           <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
           <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
           <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
+          <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
         </md-card-actions>
       </div>
       <table style="width:100%;align-text:top;">
@@ -83,6 +84,18 @@
       }
     },
     methods: {
+      updateBoxImage (name) {
+        var self = this
+        exec(`vagrant box update ${name} --force`, function (error, stdout, stderr) {
+          if (error !== null) {
+            EventBus.$emit('addLogger', stderr)
+          } else {
+            EventBus.$emit('addLogger', stdout)
+            alert(stdout)
+            self.refreshBoxImage(self)
+          }
+        })
+      },
       handleOk: function () {
         var self = this
         var dt = new Date()
