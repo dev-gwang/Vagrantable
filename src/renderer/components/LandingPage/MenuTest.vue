@@ -101,7 +101,6 @@ export default {
         jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
         jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
         this.posts = JSON.parse(jsonParse)['machines']
-        console.log('TEST : ' + Object.keys(this.posts))
       })
     })
 

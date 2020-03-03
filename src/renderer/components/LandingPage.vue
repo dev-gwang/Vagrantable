@@ -38,10 +38,11 @@
   import EventBus from '../store/eventBus'
   import NewMachine from './LandingPage/NewMachine'
   import EnvironmentConfigure from './LandingPage/EnvironmentConfigure'
+  import BoxList from './LandingPage/BoxList'
 
   export default {
     name: 'landing-page',
-    components: { MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
+    components: { BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
     data () {
       return {
         currentComponent: 'new-machine',
