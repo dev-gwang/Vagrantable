@@ -8,20 +8,32 @@
       <hr>
       <meta charset="UTF-8" />
       <span>
-        <md-table>
-          <md-table-row>
-            <md-table-head>Box Name</md-table-head>
-            <md-table-head>Provision</md-table-head>
-            <md-table-head>Version</md-table-head>
-            <md-table-head>Actions</md-table-head>
-          </md-table-row>
-          <md-table-row v-for="post, key in items" style="width:100%;">
-            <md-table-cell>{{post.name}}</md-table-cell>
-            <md-table-cell>{{post.provision}}</md-table-cell>
-            <md-table-cell>{{post.version}}</md-table-cell>
-            <md-table-cell><md-button md-raised v-on:click="deleteBoxImage(post.name)">Delete</md-button></md-table-cell>
-          </md-table-row>
-        </md-table>
+        <table style="width:100%;align-text:top;">
+          <tr>
+          <td style="width:100%;">
+            <b-card style="padding:1%;">
+              <span>
+                <b-form-input style="border-color: black;width:70%;" v-model="boxurl" placeholder="Enter Vagrant Location"></b-form-input>
+                <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>
+              </span>
+              <md-table>
+                <md-table-row>
+                  <md-table-head>Box Name</md-table-head>
+                  <md-table-head>Provision</md-table-head>
+                  <md-table-head>Version</md-table-head>
+                  <md-table-head>Actions</md-table-head>
+                </md-table-row>
+                <md-table-row v-for="post, key in items" style="width:100%;">
+                  <md-table-cell>{{post.name}}</md-table-cell>
+                  <md-table-cell>{{post.provision}}</md-table-cell>
+                  <md-table-cell>{{post.version}}</md-table-cell>
+                  <md-table-cell><md-button md-raised v-on:click="deleteBoxImage(post.name)">Delete</md-button></md-table-cell>
+                </md-table-row>
+              </md-table>
+            </b-card>
+          </td>
+          </tr>
+        </table>
       </span>
     </div>
     <div class="text-center" id="progressbar">
@@ -36,22 +48,46 @@
 import MenuStatus from '../assets/MachineStatus'
 import EventBus from '../../store/eventBus'
 
+var spawn = require('child_process').spawn
 var exec = require('child_process').exec
 
 export default {
   components: { MenuStatus },
   methods: {
+    SaveBox (url) {
+      var command = ['box', 'add', url, '--provider', 'virtualbox']
+      var child = spawn('vagrant', command)
+
+      child.stdout.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
+      })
+      child.stderr.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
+      })
+      child.on('exit', function (code, signal) {
+        EventBus.$emit('addLogger', (`${command.join(' ')} End (Code ${code})`))
+        EventBus.$emit('removeHistory', child.pid)
+        self.refreshBoxImage(self)
+      })
+      EventBus.$emit('addHistory', ({'child': child.pid, 'data': `${command.join(' ')} Start`}))
+    },
     deleteBoxImage (name) {
       var self = this
-      exec(`vagrant box remove ${name} --force`, function (error, stdout, stderr) {
-        if (error !== null) {
-          EventBus.$emit('addLogger', stderr)
-        } else {
-          EventBus.$emit('addLogger', stdout)
-          alert(stdout)
-          self.refreshBoxImage(self)
-        }
+      var command = ['box', 'remove', name, '--force']
+      var child = spawn('vagrant', command)
+
+      child.stdout.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
       })
+      child.stderr.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
+      })
+      child.on('exit', function (code, signal) {
+        EventBus.$emit('addLogger', (`${command.join(' ')} End (Code ${code})`))
+        EventBus.$emit('removeHistory', child.pid)
+        self.refreshBoxImage(self)
+      })
+      EventBus.$emit('addHistory', ({'child': child.pid, 'data': `${command.join(' ')} Start`}))
     },
     refreshBoxImage (self) {
       exec(`vagrant box list`, function (error, stdout, stderr) {
