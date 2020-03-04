@@ -13,15 +13,26 @@
                 :is="currentComponent" 
                 :swap-component="swapComponent"></div>
           <div>
-            <b-card-body
-                ref="content"
-                style="position:relative; height:300px; overflow-y:scroll;"
-                id="logger"
-            >
-              <pre>
-                {{Logger}}
-              </pre>
+            <table style="width:100%;">
+                <tr style="width:100%;">
+                  <td  style="width:50%;">
+                    <b-card-body
+                        ref="content"
+                        style="position:relative; height:300px; overflow-y:scroll;"
+                        id="logger"
+                    >
+                      <pre  wrap="hard">
+                        {{Logger}}
+                      </pre>
+                
             </b-card-body>
+              </td>
+                  <td style="width:50%;vertical-align:top">
+                    <history-page style="height:100%;">
+                    </history-page>
+                  </td>
+                </tr>
+              </table>
         </div>
         </div>
       </div>
@@ -42,10 +53,11 @@
   import NewMachine from './LandingPage/NewMachine'
   import EnvironmentConfigure from './LandingPage/EnvironmentConfigure'
   import BoxList from './LandingPage/BoxList'
+  import HistoryPage from './LandingPage/HistoryPage'
 
   export default {
     name: 'landing-page',
-    components: { BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure },
+    components: { BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
     data () {
       return {
         currentComponent: 'new-machine',
