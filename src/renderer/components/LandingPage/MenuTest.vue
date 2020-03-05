@@ -1,20 +1,21 @@
   
 <template>
-  <div class="page-container" style="width:350px;background-color:#263238
-;height:100%;">
-    <div style="height:200px;padding-top:10%;">
-      <vnt-header style="color:white;margin:5%;">
-        <span slot="subheader">
-          Vagrant Tools
-        </span>
-      </vnt-header>
-      <md-button style="background-color:white" v-on:click="start(1)">NEW</md-button>
+  <div class="page-container" style="width:350px;background-color:#333333;height:100%;">
+    <div style="height:200px;padding-top:10%;text-align:center;">
+      <br><br>
+      <md-button style="background-color:white;width:80%;margin-left:5%;vertical-align: middle;" v-on:click="start(1)">NEW</md-button>
     </div>
     <md-content class="md-scrollbar" style="height:90%;min-height:80%;">
       <md-list  v-for="post, key in posts">
-        <md-card class="md-primary" :style="post.state" :id="key">
+        <md-card class="md-primary" style="background-color:#607d8b;color:white;" :id="key">
           <md-card-header>
-            <md-card-header-text>
+            <md-card-header-text style="display: flex;">
+              <div v-if="post.state == 'running'"> 
+                <b-spinner variant="primary" label="Spinning"></b-spinner>
+              </div>
+              <div v-else> 
+                <b-spinner style="visibility: hidden;" label="Loading..." variant="light"></b-spinner>
+              </div>
               <div v-on:click="inform(post.local_data_path, key)">
                 <div>{{post.local_data_path}}</div>
                 <div class="md-subhead">{{key}}</div>
@@ -41,10 +42,6 @@
 <script>
 import EventBus from '../../store/eventBus'
 import MenuStatus from '../assets/MachineStatus'
-
-function replaceAll (str, searchStr, replaceStr) {
-  return str.split(searchStr).join(replaceStr)
-}
 
 export default {
   components: { MenuStatus },
@@ -98,8 +95,6 @@ export default {
       const exec = require('child_process').exec
       exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
         var jsonParse = stderr.split('\n').join('<br />')
-        jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
-        jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
         this.posts = JSON.parse(jsonParse)['machines']
       })
     })
@@ -107,10 +102,7 @@ export default {
     const exec = require('child_process').exec
     exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
       var jsonParse = stderr.split('\n').join('<br />')
-      jsonParse = replaceAll(jsonParse, 'running', 'background-color:#607d8b;color:white;')
-      jsonParse = replaceAll(jsonParse, 'poweroff', 'background-color:white;color:black;')
       this.posts = JSON.parse(jsonParse)['machines']
-      console.log('TEST : ' + Object.keys(this.posts))
     })
   }
 }
