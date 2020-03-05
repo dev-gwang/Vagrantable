@@ -1,47 +1,24 @@
 <template>
-  <div id="wrapper" >
-    <main style="height:100%;width:100%;">
-      <div class="row" style="height:100%;width:100%;">
-        <div class="col-xs-6">
-          <menu-test></menu-test>
-        </div>
-        <div  style="margin-top:2%;width:75%;">
-          <div  v-bind:vagrant_id="vagrantId" 
-                v-bind:vagrant_name="vagrantName" 
-                class="md-scrollbar" 
-                style="overflow:auto;height:70%;width:100%;" 
-                :is="currentComponent" 
-                :swap-component="swapComponent"></div>
-          <div>
-            <table style="width:100%;">
-                <tr style="width:100%;">
-                  <td  style="width:50%;">
-                    <b-card-body
-                        ref="content"
-                        style="position:relative; height:300px; overflow-y:scroll;"
-                        id="logger"
-                    >
-                      <pre  wrap="hard">
-                        {{Logger}}
-                      </pre>
-                
-            </b-card-body>
-              </td>
-                  <td style="width:50%;vertical-align:top">
-                    <history-page style="height:100%;">
-                    </history-page>
-                  </td>
-                </tr>
-              </table>
-        </div>
-        </div>
+  <div id="wrapper">
+ 
+    <main style="height:98%;width:100%;display: flex;">
+      <menu-test style="width:300px;height:100%;"></menu-test>
+
+      <div style="margin-top:2%;width:90%; z-index: 1;">
+        <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
+        <b-card-body ref="content" style="position:relative; height:300px; overflow-y:scroll;" id="logger">
+          <pre  wrap="hard">
+            {{Logger}}
+          </pre>
+        </b-card-body>
       </div>
       <md-snackbar style="background-color:#263238;" :md-position="position" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
         <span style="color:white;">{{ message }}</span>
       </md-snackbar>
     </main>
+    <status-component style="width:100%;height:2%">
+    </status-component>
   </div>
-        <!-- <menu-status v-bind:value="post" v-bind:vagrant_id="key"></menu-status> -->
 </template>
 
 <script>
@@ -54,10 +31,11 @@
   import EnvironmentConfigure from './LandingPage/EnvironmentConfigure'
   import BoxList from './LandingPage/BoxList'
   import HistoryPage from './LandingPage/HistoryPage'
+  import StatusComponent from './Main/StatusComponent'
 
   export default {
     name: 'landing-page',
-    components: { BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
+    components: { StatusComponent, BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
     data () {
       return {
         currentComponent: 'new-machine',
@@ -65,7 +43,8 @@
         vagrantId: false,
         vagrantName: '',
         showSnackbar: false,
-        message: ''
+        message: '',
+        showDialog: true
       }
     },
     created () {
@@ -97,6 +76,9 @@
       EventBus.$on('swapComponent', (name, id) => {
         this.currentComponent = name
       })
+      EventBus.$on('alertHistory', (name, id) => {
+        this.showDialog = true
+      })
     },
     methods: {
       open (link) {
@@ -125,6 +107,7 @@
       );
     height: 100%;
     width: 100%;
+    float: left;
   }
 
   #logo {
