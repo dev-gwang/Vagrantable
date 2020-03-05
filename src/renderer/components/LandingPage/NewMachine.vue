@@ -1,81 +1,67 @@
   
 <template>
-  <div class="page-container" style="width:100%;padding-left:1%;background-color:white;">
+  <div class="page-container" style="width:100%;padding-left:1%;">
     <vnt-header>
       <span slot="subheader">
-        NEW
+        <b>NEW</b>
       </span>
     </vnt-header>
     <hr>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <span>
-      <table style="width:100%;align-text:top;">
-        <tr>
-          <td style="width:60%;">
-            <b-card style="padding:1%;">
-              <vnt-header>
-                <h5>
-                  Basic
-                </h5>
-              </vnt-header>
-              <div>
-                Vagrant Location
-                <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
-              </div>
-              <div>
-                Vagrant Box Lists  <strong>{{ boxname }}</strong>
-                <b-form-select style="border-color: black;" v-model="boxname" :options="countries" size="sm" class="mt-3"></b-form-select>
-              </div>
-              <div>
-                CPUS
-                <b-form-input style="border-color: black;" v-model="cpus" placeholder="Enter CPUs"></b-form-input>
-              </div>
-              <div>
-                Memory (MB)
-                <b-form-input style="border-color: black;" v-model="memory" placeholder="Enter Memory"></b-form-input>
-              </div>
-              <vnt-header>
-                <h5>
-                  Network
-                </h5>
-              </vnt-header>
-              <div>
-                Network Type
-                <b-form-select style="border-color: black;" v-model="network" :options="network_type">
-                  {{network}}
-                </b-form-select>
-                Network IP
-                <b-form-input style="border-color: black;" v-model="network_ip" placeholder="Enter IP"></b-form-input>
-                Network Bridge
-                <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
-              </div>
-                <b-card style="border : 1px solid gray;height:100%;">
-                <label>Shell Code (Bash)</label>
-                <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
-      max-rows="6"></b-form-textarea>
-                </b-card>
-            </b-card>
-          </td>
-          <td style="width:40%;height:100%;vertical-align:top;">
-             
-            <b-card style="padding:1%;height:100%;" rows="30"
-      max-rows="6">
-              <vnt-header>
-                <h5>
-                  Vagrantfile
-                </h5>
-              </vnt-header>
-                   <label>Textarea</label>
-      <b-form-textarea  style="height:100%;" md-counter="80" v-model="Vagrantfile" rows="17"
-      max-rows="6">{{Vagrantfile}}</b-form-textarea>
-            <md-button class="md-raised" v-on:click="VagrantFileGenerator()">Vagrantfile Generate</md-button>
-                </b-card>
-
-          </td>
-        </tr>
-      </table>
-    
-  
+      <b-card>
+        <vnt-header>
+          <h5>Basic</h5>
+        </vnt-header>
+        <div>
+          Vagrant Location
+          <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
+        </div>
+        <div>
+          Vagrant Box Lists <b-spinner id="loading" label="Spinning"></b-spinner><strong>{{ boxname }}</strong>
+          <b-form-select style="border-color: black;" v-model="boxname" :options="countries"></b-form-select>
+        </div>
+        <div style="display: flex;">
+          <div style="width:24%;margin-right:1%;">
+            CPUS
+            <b-form-input style="border-color: black;" v-model="cpus" placeholder="Enter CPUs"></b-form-input>
+          </div>
+          <div style="width:24%;margin-right:1%;">
+            Memory (MB)
+            <b-form-input style="border-color: black;" v-model="memory" placeholder="Enter Memory"></b-form-input>
+          </div>
+          <div style="width:24%;margin-right:1%;">
+            GUI
+            <b-form-select style="border-color: black;" v-model="gui" :options="guis"></b-form-select>
+          </div>
+          <div style="width:25%;">
+            VM Name
+            <b-form-input style="border-color: black;" v-model="vmname" placeholder="Enter VM Name"></b-form-input>
+          </div>
+        </div>
+        <vnt-header>
+          <h5>
+            Network
+          </h5>
+        </vnt-header>
+        <div>
+          Network Type
+          <b-form-select style="border-color: black;" v-model="network" :options="network_type">
+            {{network}}
+          </b-form-select>
+          Network IP
+          <b-form-input style="border-color: black;" v-model="network_ip" placeholder="Enter IP"></b-form-input>
+          Network Bridge
+          <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
+        </div>
+        <vnt-header>
+          <h5>
+            Shell Code (Bash)
+          </h5>
+        </vnt-header>
+          <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
+  max-rows="6"></b-form-textarea>
+      </b-card>
     <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
     </span>
   </div>
@@ -86,11 +72,14 @@ import MenuStatus from '../assets/MachineStatus'
 import EventBus from '../../store/eventBus'
 
 var spawn = require('child_process').spawn
+var exec = require('child_process').exec
 
 export default {
   components: { MenuStatus },
   methods: {
     Save: function () {
+      var self = this
+      self.VagrantFileGenerator()
       EventBus.$emit('addToast', `${this.location} Vagrant 시작`)
       const fs = require('fs')
       try {
@@ -133,12 +122,13 @@ export default {
       config.vm.provider "virtualbox" do |vb|
         vb.memory = ${this.memory}
         vb.cpus = ${this.cpus}
+        vb.gui = ${this.gui}
+        vb.name = "${this.vmname}"
       end
       config.vm.provision "shell", inline: <<-SHELL
         ${this.BashCode}
       SHELL
     end`
-
       this.Vagrantfile = vagrantfile
     },
     SetBoxList: function (list) {
@@ -147,6 +137,8 @@ export default {
   },
   data () {
     return {
+      guis: ['true', 'false'],
+      gui: '',
       BashCode: '',
       network: '',
       network_type: [
@@ -167,8 +159,22 @@ export default {
     }
   },
   created () {
+    var self = this
     EventBus.$on('SetBoxList', (payload) => {
       this.countries = payload
+    })
+
+    exec('vagrant box list', function (error, stdout, stderr) {
+      var result = []
+      var arr = stdout.split('\n')
+      for (var i = 0; i < arr.length - 1; i++) {
+        result[i] = { text: arr[i].split(' ')[0], value: arr[i].split(' ')[0] }
+      }
+      if (error !== null) {
+        console.log(error)
+      }
+      self.countries = result
+      document.getElementById('loading').style.visibility = 'hidden'
     })
   }
 }

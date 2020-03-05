@@ -1,7 +1,7 @@
   
 <template>
   <div>
-    <div style="visibility:hidden" id="main">
+    <div style="display:none" id="main">
       <div>
         <vnt-header>
           <span slot="subheader">
@@ -22,15 +22,15 @@
           <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
         </md-card-actions>
       </div>
-      <table style="width:100%;align-text:top;">
+      <table style="width:100%;align-text:top;height:100%;">
         <tr>
             <td style="width:60%;">
               <b-card style="padding:1%;">
               <vnt-header>
                 <h5>
-                  Snapshot List <b-button v-b-modal.modal-1>Capture Snapshot</b-button>
+                  Snapshot List <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
                 </h5>
-                <b-modal id="modal-1" title="BootstrapVue" @ok="handleOk">
+                <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
                   <p class="my-4">Capture Snapshot</p>
                   <b-form-input v-model="snapshotName" placeholder="Enter your name"></b-form-input>
                 </b-modal>
@@ -54,12 +54,16 @@
                   </td>
                 </tr>
               </table>
+              <md-field>
+                <md-textarea style="height:100%;" md-counter="1000" rows="100" v-model="Vagrantfile"></md-textarea>
+              </md-field>
+              <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
               </b-card>
             </td>
           </tr>
         </table>
     </div>
-    <div class="text-center" id="progressbar">
+    <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
       Loading...
@@ -80,10 +84,31 @@
         SnapshotList: [],
         ports: [],
         name: '',
-        value: 0
+        value: 0,
+        Vagrantfile: ''
       }
     },
     methods: {
+      Save: function () {
+        var self = this
+        const fs = require('fs')
+        var location = self.vagrant_name
+
+        fs.writeFile(`${location.replace('/.vagrant', '')}/Vagrantfile`, this.Vagrantfile, 'utf8', function (error) {
+          console.log(error)
+        })
+      },
+      readVagrantfile (location) {
+        var self = this
+        var fs = require('fs')
+        fs.readFile(`${location.replace('/.vagrant', '')}/Vagrantfile`, 'utf8', function (err, data) {
+          if (!err) {
+            self.Vagrantfile = data
+          } else {
+            alert(err)
+          }
+        })
+      },
       updateBoxImage (name) {
         var self = this
         exec(`vagrant box update ${name} --force`, function (error, stdout, stderr) {
@@ -91,7 +116,6 @@
             EventBus.$emit('addLogger', stderr)
           } else {
             EventBus.$emit('addLogger', stdout)
-            alert(stdout)
             self.refreshBoxImage(self)
           }
         })
@@ -100,26 +124,12 @@
         var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
-        EventBus.$emit('addToast', `${this.snapshotName}-${dateString} Snapshot 추가`)
+        var name = `${this.snapshotName}-${dateString}`
 
-        exec(`vagrant snapshot save ${this.vagrant_id} ${this.snapshotName}-${dateString}`, function (error, stdout, stderr) {
-          EventBus.$emit('addLogger', stdout)
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
+        var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
+        var pid = child.pid
 
-          self.snapshotList()
-
-          if (error !== null) {
-            EventBus.$emit('addLogger', stderr)
-
-            console.log('exec error: ' + error)
-          }
-        })
-      },
-      snapshotRemove: function (id, name) {
-        const self = this
-        var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', name], {shell: true})
-        EventBus.$emit('addToast', `${name} Snapshot 삭제`)
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
 
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
@@ -130,66 +140,74 @@
         })
 
         child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+          self.snapshotList()
+        })
+      },
+      snapshotRemove: function (id, name) {
+        const self = this
+        var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', `'${name}'`], {shell: true})
+        var pid = child.pid
+
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 삭제`})
+        child.stdout.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.stderr.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
           self.snapshotList()
         })
       },
       snapshotRestore: function (id, name) {
-        exec(`vagrant snapshot restore ${id} "${name}"`, function (error, stdout, stderr) {
-          EventBus.$emit('addLogger', stdout)
-          if (error !== null) {
-            EventBus.$emit('addLogger', `vagrant snapshot restore ${id} ${name} ${stderr}`)
-            console.log('exec error: ' + error)
-          } else {
-            EventBus.$emit('addLogger', stdout)
-          }
+        const self = this
+        var child = spawn('vagrant', ['snapshot', 'restore', '', id, '', `'${name}'`], {shell: true})
+        var pid = child.pid
+
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 복원`})
+        child.stdout.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.stderr.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 복원`})
+          self.snapshotList()
         })
       },
       provision: function (id) {
         var child = spawn('vagrant', ['up', '', id, '--provision'])
 
         child.stdout.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'green'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
         })
         child.stderr.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'red'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
         })
       },
       remove: function (id) {
-        alert(id)
         var child = spawn('vagrant', ['destroy', '-f', id])
 
         child.stdout.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'green'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
           EventBus.$emit('removeVM', id)
         })
         child.stderr.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'red'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
         })
       },
       reload: function (id) {
         exec('vagrant reload ' + id, function (error, stdout, stderr) {
-          var getId = document.getElementById(id)
           EventBus.$emit('addLogger', stdout)
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
-
-          getId.style.backgroundColor = 'green'
-          getId.style.color = 'white'
 
           if (error !== null) {
-            getId.style.backgroundColor = 'red'
             EventBus.$emit('addLogger', stderr)
 
             console.log('exec error: ' + error)
@@ -200,42 +218,35 @@
         var child = spawn('vagrant', ['up', id])
 
         child.stdout.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'green'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
         })
         child.stderr.on('data', (data) => {
-          var getId = document.getElementById(id)
-          getId.style.backgroundColor = 'red'
-          getId.style.color = 'white'
           EventBus.$emit('addLogger', data)
+        })
+        child.on('exit', function (code, signal) {
+          EventBus.$emit('refreshVM')
         })
       },
       stop: function (id) {
         exec('vagrant halt ' + id, function (error, stdout, stderr) {
-          var getId = document.getElementById(id)
           EventBus.$emit('addLogger', stdout)
 
-          console.log('stdout: ' + stdout)
-          console.log('stderr: ' + stderr)
-          getId.style.backgroundColor = 'white'
-          getId.style.color = 'black'
           if (error !== null) {
-            getId.style.backgroundColor = 'red'
             console.log('exec error: ' + error)
           }
+          EventBus.$emit('refreshVM')
         })
       },
       snapshotList: function () {
         this.value = 10
         const self = this
-        self.SnapshotList = []
         childProcess.exec('vagrant snapshot list ' + this.vagrant_id, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
           }
           var stdoutArray = stdout.split('\n')
+          self.SnapshotList = []
+
           for (var i = 0; i < stdoutArray.length; i++) {
             var strTemp = stdoutArray[i]
 
@@ -247,8 +258,8 @@
           }
           self.value = 100
 
-          document.getElementById('main').style.visibility = 'visible'
-          document.getElementById('progressbar').style.visibility = 'hidden'
+          document.getElementById('main').style.display = 'block'
+          document.getElementById('progressbar').style.display = 'none'
         })
       },
       doThis: function () {
@@ -283,9 +294,10 @@
     created () {
       this.cpus = '111'
       this.doThis()
+      this.readVagrantfile(this.vagrant_name)
       EventBus.$on('refreshInform', () => {
-        document.getElementById('main').style.visibility = 'hidden'
-        document.getElementById('progressbar').style.visibility = 'visible'
+        document.getElementById('main').style.display = 'none'
+        document.getElementById('progressbar').style.display = 'block'
         this.doThis2()
       })
 
