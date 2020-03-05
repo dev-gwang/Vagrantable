@@ -1,16 +1,16 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-const path = require('path');
-const url = require('url');
+const path = require('path')
+const url = require('url')
 
-//const customTitlebar = require('custom-electron-titlebar');
-const customTitlebar = require('..'); // Delete this line and uncomment top line
+// const customTitlebar = require('custom-electron-titlebar');
+const customTitlebar = require('..') // Delete this line and uncomment top line
 
 window.addEventListener('DOMContentLoaded', () => {
-  new customTitlebar.Titlebar({
+  customTitlebar.Titlebar({
     backgroundColor: customTitlebar.Color.fromHex('#263238'),
-    icon: url.format(path.join(__dirname, '/images', '/icon.png')),
-  });
+    icon: url.format(path.join(__dirname, '/images', '/icon.png'))
+  })
 
   alert('a')
 
