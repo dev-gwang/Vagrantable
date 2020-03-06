@@ -22,8 +22,8 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     minWidth: 1000,
-    minHeight: 1000,
-    height: 1000,
+    minHeight: 800,
+    height: 800,
     width: 1500,
     autoHideMenuBar: true,
     titleBarStyle: 'customButtonsOnHover',
