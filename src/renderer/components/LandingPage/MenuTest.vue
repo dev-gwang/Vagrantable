@@ -5,7 +5,7 @@
       <br><br>
       <md-button style="background-color:white;width:80%;margin-left:5%;vertical-align: middle;" v-on:click="start(1)">NEW</md-button>
     </div>
-    <md-content class="md-scrollbar" style="height:90%;min-height:80%;">
+    <md-content class="md-scrollbar" style="height:65%;min-height:65%;overflow:auto;">
       <md-list  v-for="post, key in posts">
         <md-card class="md-primary" style="background-color:#607d8b;color:white;" :id="key">
           <md-card-header>
@@ -25,11 +25,7 @@
         </md-card>
         <!-- <menu-status v-bind:value="post" v-bind:vagrant_id="key" ></menu-status> -->
       </md-list>
-      <div style="position:fixed;bottom:0;margin:1%;">
-        <b-button size="sm" class="mb-2" v-on:click="changeConfigure()">
-      <b-icon icon="gear-fill"></b-icon> Settings
-    </b-button>
-
+      <div style="position:fixed;bottom:0;margin:2%;">
         <b-button size="sm" class="mb-2" v-on:click="boxLists()">
       <b-icon icon="gear-fill"></b-icon> BoxList
     </b-button>
