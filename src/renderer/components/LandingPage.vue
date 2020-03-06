@@ -1,12 +1,11 @@
 <template>
   <div id="wrapper">
- 
-    <main style="height:98%;width:100%;display: flex;">
+    <main style="height:97%;width:100%;display: flex;">
       <menu-test style="width:300px;height:100%;"></menu-test>
-
-      <div style="margin-top:2%;width:90%; z-index: 1;">
+      <div style="margin-top:2%;width:90%; height:100%;z-index: 1;">
         <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
-        <b-card-body ref="content" style="position:relative; height:300px; overflow-y:scroll;" id="logger">
+        <hr>
+        <b-card-body ref="content" style="height:25%; overflow-y:scroll;" id="logger">
           <pre  wrap="hard">
             {{Logger}}
           </pre>
@@ -16,7 +15,7 @@
         <span style="color:white;">{{ message }}</span>
       </md-snackbar>
     </main>
-    <status-component style="width:100%;height:2%">
+    <status-component style="width:100%;height:30px">
     </status-component>
   </div>
 </template>
