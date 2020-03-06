@@ -204,14 +204,22 @@
         })
       },
       reload: function (id) {
-        exec('vagrant reload ' + id, function (error, stdout, stderr) {
-          EventBus.$emit('addLogger', stdout)
+        const self = this
+        var child = spawn('vagrant', ['reload', id], {shell: true})
+        var pid = child.pid
 
-          if (error !== null) {
-            EventBus.$emit('addLogger', stderr)
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Reload`})
+        child.stdout.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
 
-            console.log('exec error: ' + error)
-          }
+        child.stderr.on('data', (data) => {
+          EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Reload`})
+          self.snapshotList()
         })
       },
       start: function (id) {
