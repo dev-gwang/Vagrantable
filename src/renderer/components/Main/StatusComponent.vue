@@ -1,9 +1,10 @@
   
 <template>
-  <div style="width:100%;background-color:#3498db; margin:0%; padding:0%;" v-on:click="history()" >
-    <md-button style="border:0;width:100%;background-color:#3498db; margin:0%; padding:0%;font-size:0.5;" v-on:click="history()">
-      Process: {{ counter }}
-      </md-button>     <b-modal id="modal-1" title="BootstrapVue" @ok="handleOk">
+  <div style="width:100%;background-color:#3498db; margin:0%; padding:0%;"  >
+    <md-menu md-direction="bottom-start">
+      <md-button v-on:click="history()">Process {{counter}}</md-button>
+    </md-menu>
+      <b-modal id="modal-1" @ok="handleOk">
         <table style="width:100%;align-text:top;">
         <tr><td style="width:100%;">
           <b-card style="padding:1%;">
