@@ -96,9 +96,12 @@ export default {
     })
 
     const exec = require('child_process').exec
-    exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
-      var jsonParse = stderr.split('\n').join('<br />')
-      this.posts = JSON.parse(jsonParse)['machines']
+
+    exec('vagrant global-status --prune', (stdout, stderr) => {
+      exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
+        var jsonParse = stderr.split('\n').join('<br />')
+        this.posts = JSON.parse(jsonParse)['machines']
+      })
     })
   }
 }
