@@ -9,11 +9,5 @@
 </template>
 
 <script>
-import MenuStatus from '../assets/MachineStatus'
-import EventBus from '../../store/eventBus'
 
-var spawn = require('child_process').spawn
-
-export default {
-}
 </script>
