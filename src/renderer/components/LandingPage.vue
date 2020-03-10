@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <main style="height:97%;width:100%;display: flex;">
-      <menu-test style="width:300px;height:100%;"></menu-test>
+      <menu-list style="width:300px;height:100%;"></menu-list>
       <div style="margin-top:2%;width:90%; height:100%;z-index: 1;">
         <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="md-scrollbar" style="overflow:auto;height:70%;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
         <hr>
@@ -23,7 +23,7 @@
 <script>
   import Information from './LandingPage/Information'
   import SystemInformation from './LandingPage/SystemInformation'
-  import MenuTest from './LandingPage/MenuTest'
+  import MenuList from './LandingPage/Menu'
   import MachineStatus from './assets/MachineStatus'
   import EventBus from '../store/eventBus'
   import NewMachine from './LandingPage/NewMachine'
@@ -34,7 +34,7 @@
 
   export default {
     name: 'landing-page',
-    components: { StatusComponent, BoxList, MenuTest, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
+    components: { StatusComponent, BoxList, MenuList, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
     data () {
       return {
         currentComponent: 'new-machine',
@@ -47,13 +47,6 @@
       }
     },
     created () {
-      // let myNotification = new Notification('Title', {
-      //   body: 'Lorem Ipsum Dolor Sit Amet'
-      // })
-
-      // myNotification.onclick = () => {
-      //   console.log('Notification clicked')
-      // }
       EventBus.$on('addToast', (payload) => {
         this.message = payload
         this.showSnackbar = true
