@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'vagrant-gui-tool'
+    name: 'vagrantable'
   }
 </script>
 

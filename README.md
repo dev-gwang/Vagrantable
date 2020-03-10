@@ -1,4 +1,4 @@
-# vagrant-gui-tool
+# Vagrantable
 
 > An electron-vue project
 

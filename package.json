@@ -1,5 +1,5 @@
 {
-  "name": "vagrant-gui-tool",
+  "name": "vagrantable",
   "version": "0.0.1",
   "author": "pki054@naver.com",
   "description": "An electron-vue project",
@@ -22,7 +22,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "vagrant-gui-tool",
+    "productName": "vagrantable",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
