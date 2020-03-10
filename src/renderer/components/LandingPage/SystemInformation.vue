@@ -13,7 +13,6 @@
       </div>
       <div style="align-text:left;">
         <md-card-actions>
-          <md-button v-on:click="configure(vagrant_id)">Config</md-button>
           <md-button v-on:click="start(vagrant_id)">Up</md-button>
           <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
           <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
@@ -183,13 +182,22 @@
         })
       },
       provision: function (id) {
-        var child = spawn('vagrant', ['up', '', id, '--provision'])
+        const self = this
+        var child = spawn('vagrant', ['up', id, '--provision'], {shell: true})
+        var pid = child.pid
 
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Reload`})
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
         })
+
         child.stderr.on('data', (data) => {
           EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Reload`})
+          self.snapshotList()
         })
       },
       remove: function (id) {
