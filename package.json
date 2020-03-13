@@ -61,7 +61,7 @@
     "bootstrap-vue": "^2.4.0",
     "custom-electron-titlebar": "^3.2.2-hotfix62",
     "dev-runner": "0.0.3",
-    "docs-parser": "0.0.2",
+    "docs-parser": "^0.0.2",
     "env-var": "^6.0.3",
     "execSync": "^1.0.2",
     "jquery": "^3.4.1",
