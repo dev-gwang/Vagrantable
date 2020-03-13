@@ -55,6 +55,7 @@ export default {
   components: { MenuStatus },
   methods: {
     SaveBox (url) {
+      var self = this
       var command = ['box', 'add', url, '--provider', 'virtualbox']
       var child = spawn('vagrant', command)
 
@@ -66,7 +67,7 @@ export default {
       })
       child.on('exit', function (code, signal) {
         EventBus.$emit('addLogger', (`${command.join(' ')} End (Code ${code})`))
-        EventBus.$emit('removeHistory', child.pid)
+        EventBus.$emit('removeHistory', {data: command, child: child.pid})
         self.refreshBoxImage(self)
       })
       EventBus.$emit('addHistory', ({'child': child.pid, 'data': `${command.join(' ')} Start`}))
@@ -84,7 +85,8 @@ export default {
       })
       child.on('exit', function (code, signal) {
         EventBus.$emit('addLogger', (`${command.join(' ')} End (Code ${code})`))
-        EventBus.$emit('removeHistory', child.pid)
+        EventBus.$emit('removeHistory', {data: command, child: child.pid})
+
         self.refreshBoxImage(self)
       })
       EventBus.$emit('addHistory', ({'child': child.pid, 'data': `${command.join(' ')} Start`}))
@@ -92,22 +94,26 @@ export default {
     refreshBoxImage (self) {
       exec(`vagrant box list`, function (error, stdout, stderr) {
         if (error !== null) {
+          alert(error)
           EventBus.$emit('addLogger', stderr)
         } else {
           self.items = []
-          var boxList = stdout.split('\n')
-          boxList.forEach(element => {
-            var content = element.replace('(', '').replace(',', '').replace(')', '').split(/\s+/)
-            if (content[0] === '') {
-              return true
-            }
-            self.items.push({
-              name: content[0],
-              provision: content[1],
-              version: content[2]
+
+          if (stdout.indexOf('There are no installed boxes')) {
+            var boxList = stdout.split('\n')
+            boxList.forEach(element => {
+              var content = element.replace('(', '').replace(',', '').replace(')', '').split(/\s+/)
+              if (content[0] === '') {
+                return true
+              }
+              self.items.push({
+                name: content[0],
+                provision: content[1],
+                version: content[2]
+              })
+              console.log(self.items)
             })
-            console.log(self.items)
-          })
+          }
           document.getElementById('main').style.visibility = 'visible'
           document.getElementById('progressbar').style.visibility = 'hidden'
         }
