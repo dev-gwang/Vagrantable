@@ -1,8 +1,29 @@
+<style>
+table {
+    width:100%;
+}
+</style>
+
 # Vagrantable
 
-> An electron-vue project
+> Vagrantable은 GUI를 사용하여 편리하게 Vagrant를 조작할 수 있는 도구입니다.
 
-#### Build Setup
+## 기능
+---
+### 1. Vagrant Box
+#### vagrant box 리스트
+- 캡처
+![이미지 이름](./assets/boxlist.png)
+- 명령
+```
+vagrant box list
+```
+
+#### vagrant box 추가 및 삭제
+- 캡처
+![이미지 이름](./assets/boxadd.gif)
+![이미지 이름](./assets/boxremove.gif)
+
 
 ``` bash
 # install dependencies
