@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Settings from '../../../utils/config'
 import MenuStatus from '../assets/MachineStatus'
 const env = require('env-var')
 
@@ -38,6 +39,9 @@ export default {
       for (var key in this.ENV) {
         env.get(key).default(this.ENV[key].asString())
       }
+    },
+    saveConfigure () {
+      Settings.getPath()
     }
   },
   data () {
@@ -64,6 +68,7 @@ export default {
     }
   },
   created () {
+    this.saveConfigure()
     for (var key in this.ENV) {
       this.ENV[key] = env.get(key).asString()
     }

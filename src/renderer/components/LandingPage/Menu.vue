@@ -27,8 +27,12 @@
       </md-list>
       <div style="position:fixed;bottom:0;margin:2%;">
         <b-button size="sm" class="mb-2" v-on:click="boxLists()">
-      <b-icon icon="gear-fill"></b-icon> BoxList
-    </b-button>
+          <b-icon icon="gear-fill"></b-icon> BoxList
+        </b-button>
+
+        <b-button size="sm" class="mb-2" v-on:click="changeConfigure()">
+          <b-icon icon="gear-fill"></b-icon> Settings
+        </b-button>
       </div>
     </md-content>
       
