@@ -25,7 +25,13 @@ function createWindow () {
     minHeight: 800,
     height: 800,
     width: 1500,
-    frame: false
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: path.join(__dirname, './render.js'),
+      nodeIntegration: true
+    },
+    frame: false,
+    titleBarStyle: 'hidden'
   })
   mainWindow.loadURL(winURL)
 
