@@ -1,7 +1,5 @@
 <template>
   <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
-    <main>
       <div class="left-side">
         <span class="title">
           Welcome to your new project!
@@ -25,7 +23,6 @@
           <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
         </div>
       </div>
-    </main>
   </div>
 </template>
 
@@ -55,6 +52,7 @@
   body { font-family: 'Source Sans Pro', sans-serif; }
 
   #wrapper {
+    background-color: #263238;
     background:
       radial-gradient(
         ellipse at top left,
@@ -62,7 +60,7 @@
         rgba(229, 229, 229, .9) 100%
       );
     height: 100vh;
-    padding: 60px 80px;
+    padding-top: 40px;
     width: 100vw;
   }
 

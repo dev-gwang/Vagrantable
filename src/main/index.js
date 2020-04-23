@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+const path = require('path')
 
 /**
  * Set `__static` path to static files in production
@@ -20,11 +21,12 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
+    minWidth: 1000,
+    minHeight: 800,
+    height: 800,
+    width: 1500,
+    frame: false
   })
-
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
@@ -56,11 +58,9 @@ app.on('activate', () => {
 
 /*
 import { autoUpdater } from 'electron-updater'
-
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
 })
-
 app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })

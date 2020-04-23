@@ -1,33 +1,50 @@
 <template>
-  <div>
-    <div class="title">Information</div>
-    <div class="items">
-      <div class="item">
-        <div class="name">Path:</div>
-        <div class="value">{{ path }}</div>
+  <v-row align="center">
+    <v-col class="text-center" cols="12" sm="4">
+      <div class="my-2">
+        <v-btn depressed small>Normal</v-btn>
       </div>
-      <div class="item">
-        <div class="name">Route Name:</div>
-        <div class="value">{{ name }}</div>
+      <div class="my-2">
+        <v-btn depressed small color="primary">Primary</v-btn>
       </div>
-      <div class="item">
-        <div class="name">Vue.js:</div>
-        <div class="value">{{ vue }}</div>
+      <div class="my-2">
+        <v-btn depressed small color="error">Error</v-btn>
       </div>
-      <div class="item">
-        <div class="name">Electron:</div>
-        <div class="value">{{ electron }}</div>
+      <div class="my-2">
+        <v-btn depressed small disabled>Disabled</v-btn>
       </div>
-      <div class="item">
-        <div class="name">Node:</div>
-        <div class="value">{{ node }}</div>
+    </v-col>
+
+    <v-col class="text-center" cols="12" sm="4">
+      <div class="my-2">
+        <v-btn depressed>Normal</v-btn>
       </div>
-      <div class="item">
-        <div class="name">Platform:</div>
-        <div class="value">{{ platform }}</div>
+      <div class="my-2">
+        <v-btn depressed color="primary">Primary</v-btn>
       </div>
-    </div>
-  </div>
+      <div class="my-2">
+        <v-btn depressed color="error">Error</v-btn>
+      </div>
+      <div class="my-2">
+        <v-btn depressed disabled>Disabled</v-btn>
+      </div>
+    </v-col>
+
+    <v-col class="text-center" cols="12" sm="4">
+      <div class="my-2">
+        <v-btn depressed large>Normal</v-btn>
+      </div>
+      <div class="my-2">
+        <v-btn depressed large color="primary">Primary</v-btn>
+      </div>
+      <div class="my-2">
+        <v-btn depressed large color="error">Error</v-btn>
+      </div>
+      <div class="my-2">
+        <v-btn depressed large disabled>Disabled</v-btn>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
