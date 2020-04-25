@@ -3714,6 +3714,18 @@ electron-is-dev@^0.3.0:
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
   integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
 
+electron-json-storage@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.8.tgz#7be4496fc02988cb35545606a89a2e584d949b9d"
+  integrity sha512-cBaxfSVG5SLWIvgkRJyl96W2VPCvvBcLjNaOfKC1oCENzStMt2BDzh/Qfxcz2M1mK4kNnsVv//CD46jIRrqWPw==
+  dependencies:
+    async "^2.0.0"
+    lockfile "^1.0.4"
+    lodash "^4.0.1"
+    mkdirp "^0.5.1"
+    rimraf "^2.5.1"
+    write-file-atomic "^2.4.2"
+
 electron-localshortcut@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/electron-localshortcut/-/electron-localshortcut-3.2.1.tgz#cfc83a3eff5e28faf98ddcc87f80a2ce4f623cd3"
@@ -6324,6 +6336,13 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lockfile@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/lockfile/-/lockfile-1.0.4.tgz#07f819d25ae48f87e538e6578b6964a4981a5609"
+  integrity sha512-cvbTwETRfsFh4nHsL1eGWapU1XFi5Ot9E85sWAwia7Y7EgB7vfqcZhTKZ+l7hCGxSPoushMv5GKhT5PdLv03WA==
+  dependencies:
+    signal-exit "^3.0.2"
+
 lodash._arraycopy@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._arraycopy/-/lodash._arraycopy-3.0.0.tgz#76e7b7c1f1fb92547374878a562ed06a3e50f6e1"
@@ -6482,7 +6501,7 @@ lodash.toplainobject@^3.0.0:
     lodash._basecopy "^3.0.0"
     lodash.keysin "^3.0.0"
 
-lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.8.0, lodash@~4.17.12:
+lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.8.0, lodash@~4.17.12:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -8370,7 +8389,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.2.8, rimraf@^2.5.2, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1, rimraf@^2.6.3:
+rimraf@2, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.5.2, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1, rimraf@^2.6.3:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
   integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
@@ -10191,7 +10210,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-write-file-atomic@^2.0.0, write-file-atomic@^2.3.0:
+write-file-atomic@^2.0.0, write-file-atomic@^2.3.0, write-file-atomic@^2.4.2:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.4.3.tgz#1fd2e9ae1df3e75b8d8c367443c692d4ca81f481"
   integrity sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ==
