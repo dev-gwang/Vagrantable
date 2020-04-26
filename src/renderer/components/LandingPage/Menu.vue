@@ -1,11 +1,14 @@
 <template>
-  <v-row align="center">
-    <v-col class="text-center" cols="12" sm="4">
-      <div class="my-2">
-        <v-btn depressed small>Normal</v-btn>
-      </div>
-    </v-col>
-  </v-row>
+  <div style="width:100%;height:100vh">
+    <v-row align="center">
+      <v-col class="text-center" cols="12" sm="4">
+        <div class="my-2">
+          <v-btn depressed small :width="100">Normal</v-btn>
+        </div>
+      </v-col>
+    </v-row>
+  </div>
+  
 </template>
 
 <script>

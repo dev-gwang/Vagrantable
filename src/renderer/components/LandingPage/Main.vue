@@ -1,10 +1,11 @@
 <template>
-  <div id="wrapper" :is="MainComponent">
-    <main id="main">
+  <div>
+    <main style="height:97%;width:100%;display: flex;">
       <div class="left-side">
-        <menu></Menu>
+        <Menu class="Menu"></Menu>
       </div>
       <div class="right-side">
+        wef
       </div>
     </main>
   </div>
@@ -39,10 +40,19 @@
     width:100%;
   }
   #wrapper {
+    background:
+      radial-gradient(
+        ellipse at top left,
+        rgba(255, 255, 255, 1) 100%,
+        rgba(229, 229, 229, .9) 100%
+      );
+    height: 100%;
+    width: 100%;
     float: left;
-    background-color: #263238;
-    height: 100vh;
-    padding-top: 40px;
+  }
+
+  .Menu {
+    margin-top:10%;
   }
 
   #logo {
@@ -56,14 +66,18 @@
     justify-content: space-between;
   }
 
-  main > div { flex-basis: 50%; }
-
   .left-side {
     display: flex;
     flex-direction: column;
-        width:300px;
-        background-color: #263238;
+    width:300px;
+    height:100vh;
+    background-color: #263238;
+  }
 
+  .right-side {
+    display: flex;
+    width: 100%;
+    height: 100vh;
   }
 
   .welcome {

@@ -12,7 +12,7 @@
 
   export default {
     name: 'landing-page',
-    components: { LoadingComponent },
+    components: { LoadingComponent, Main },
     data () {
       return {
         MainComponent: 'LoadingComponent'

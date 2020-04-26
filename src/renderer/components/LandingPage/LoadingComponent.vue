@@ -12,6 +12,7 @@
 
 <script>
 import Config from '../../../scripts/config'
+import EventBus from '../../store/eventBus'
 
 export default {
   data () {
@@ -28,6 +29,7 @@ export default {
         await Config.versionCheck(this.$store.state.config)
       }
       this.$store.dispatch('saveConfig', Config.getData())
+      EventBus.$emit('completeLoading')
     }
   },
   created () {
