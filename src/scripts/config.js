@@ -1,8 +1,8 @@
 const storage = require('electron-json-storage')
 const fs = require('fs')
+const path = require('path')
 var config = {}
-const dataPath = `${storage.getDataPath()}/vagrantable`
-
+const dataPath = path.join(storage.getDataPath(), 'vagrantable')
 config.getPath = function () {
   return dataPath
 }
@@ -18,9 +18,10 @@ config.getData = function () {
 
 config.isConfigFileExists = () => {
   storage.setDataPath(dataPath)
-  if (!fs.existsSync(`${dataPath}/vagrantable.json`)) {
-    if (!fs.existsSync(`${dataPath}`)) {
-      fs.mkdirSync(dataPath)
+  if (!fs.existsSync(path.join(dataPath, 'vagrantable.json'))) {
+    if (!fs.existsSync(dataPath)) {
+      console.log(dataPath)
+      fs.mkdirSync(dataPath, { recursive: true })
     }
     console.log('The path not exists. ')
     return 0
@@ -58,7 +59,7 @@ config.readConfigFile = function () {
   //   this.setData(data)
   // })
 
-  this.data = JSON.parse(fs.readFileSync(`${dataPath}/vagrantable.json`))
+  this.data = JSON.parse(fs.readFileSync(`${dataPath}`))
   // })
   // myFirstPromise.then(successMessage => {
   // console.log(successMessage)
