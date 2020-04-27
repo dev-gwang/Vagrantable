@@ -3,11 +3,9 @@
   <div>
     <div style="display:none" id="main">
       <div>
-        <vnt-header>
-          <span slot="subheader">
+        <h1>
           {{vagrant_name}} ({{vagrant_id}})
-          </span>
-        </vnt-header>
+        </h1>
         <hr>
         <br>
       </div>

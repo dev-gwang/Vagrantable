@@ -1,6 +1,6 @@
   
 <template>
-  <div class="page-container" style="width:350px;background-color:#333333;height:100%;">
+  <div class="page-container" style="width:350px;background-color:#252526;height:100%;">
     <div style="height:200px;padding-top:10%;text-align:center;">
       <br><br>
       <md-button style="background-color:white;width:80%;margin-left:5%;vertical-align: middle;" v-on:click="start(1)">NEW</md-button>
@@ -87,6 +87,10 @@ export default {
       delete this.posts[payload]
     })
 
+    EventBus.$on('setVM', (payload) => {
+      this.posts = payload
+    })
+
     EventBus.$on('refreshVM', () => {
       const exec = require('child_process').exec
       exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
@@ -94,15 +98,18 @@ export default {
         this.posts = JSON.parse(jsonParse)['machines']
       })
     })
+    console.log(JSON.stringify(this.$store.machine))
+    this.posts = this.$store.machine
+    console.log(`test ${JSON.stringify(this.posts)}`)
 
-    const exec = require('child_process').exec
+    // const exec = require('child_process').exec
 
-    exec('vagrant global-status --prune', (stdout, stderr) => {
-      exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
-        var jsonParse = stderr.split('\n').join('<br />')
-        this.posts = JSON.parse(jsonParse)['machines']
-      })
-    })
+    // exec('vagrant global-status --prune', (stdout, stderr) => {
+    //   exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
+    //     var jsonParse = stderr.split('\n').join('<br />')
+    //     this.posts = JSON.parse(jsonParse)['machines']
+    //   })
+    // })
   }
 }
 </script>

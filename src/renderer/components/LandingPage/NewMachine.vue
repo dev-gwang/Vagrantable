@@ -1,18 +1,14 @@
   
 <template>
   <div class="page-container" style="width:100%;padding-left:1%;">
-    <vnt-header>
-      <span slot="subheader">
-        <b>NEW</b>
-      </span>
-    </vnt-header>
+    <h1>
+        NEW
+    </h1>
     <hr>
     <meta charset="UTF-8"/>
     <span>
-      <b-card>
-        <vnt-header>
-          <h5>Basic</h5>
-        </vnt-header>
+      <v-card>
+        <div class="title">Basic</div>
         <div>
           Vagrant Location
           <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
@@ -39,11 +35,7 @@
             <b-form-input style="border-color: black;" v-model="vmname" placeholder="Enter VM Name"></b-form-input>
           </div>
         </div>
-        <vnt-header>
-          <h5>
-            Network
-          </h5>
-        </vnt-header>
+        <div class="title">Network</div>
         <div>
           Network Type
           <b-form-select style="border-color: black;" v-model="network" :options="network_type">
@@ -54,14 +46,10 @@
           Network Bridge
           <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
         </div>
-        <vnt-header>
-          <h5>
-            Shell Code (Bash)
-          </h5>
-        </vnt-header>
+        <div class="title">Shell Code (Bash)</div>
           <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
   max-rows="6"></b-form-textarea>
-      </b-card>
+      </v-card>
     <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
     </span>
   </div>

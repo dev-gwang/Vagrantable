@@ -22,7 +22,7 @@
 
 <script>
 import EventBus from '../store/eventBus'
-import MenuStatus from '../Assets/MachineStatus'
+import MenuStatus from './assets/MachineStatus'
 var kill = require('tree-kill')
 
 export default {
