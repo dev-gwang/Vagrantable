@@ -1,20 +1,19 @@
 var state = {
   version: 2,
-  menu: [
-    {
-      'name': 'vagrant_binary_location',
+  menu: {
+    'vagrant_binary_location': {
       'content': {
         comments: 'Vagrant Execute File Location',
         value: ''
       }
     }
-  ]
+  }
 }
 
 const mutations = {
   SET_DEFAULT_KEY (key, object) {
     state.menu = object.menu
-    console.log(`SET_DEFAULT_KEY : ${JSON.stringify(object)} ${JSON.stringify(state)}`)
+    console.log(`SET_DEFAULT_KEY : ${JSON.stringify(state)}`)
   },
   SET_DEFAULT_MACHINES (key, object) {
     state.machine = object

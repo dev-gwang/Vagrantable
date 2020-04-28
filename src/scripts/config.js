@@ -39,7 +39,6 @@ config.writeConfigFile = function (value) {
 }
 
 config.versionCheck = function (latest) {
-  console.log(`versionCheck ${latest}`)
   var data = this.data
   if (data.version !== latest.version) {
     data.version = latest.version

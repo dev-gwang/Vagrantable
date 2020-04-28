@@ -69,7 +69,7 @@ export default {
     GetConfigure () {
       // var config = Config.getConfig()
       this.Config = this.$store.state.config
-      console.log(`TESTTEST ${JSON.stringify(this.Config)}`)
+      console.log(`TESTTEST ${JSON.stringify(this.$store.state.config)}`)
     }
   },
   created () {

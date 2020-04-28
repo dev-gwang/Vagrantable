@@ -26,22 +26,22 @@ export default {
         Config.writeConfigFile(this.$store.state.config)
       } else {
         Config.readConfigFile()
+        console.log(`${JSON.stringify(this.$store.state.config)}`)
         await Config.versionCheck(this.$store.state.config)
       }
 
       var config = await Config.getData()
       await this.$store.dispatch('saveConfig', config)
-      console.log(`check config: ${JSON.stringify(config)} ${JSON.stringify(this.$store.state.config)}`)
 
       EventBus.$emit('completeLoading')
     },
-    getDefaultMachine () {
+    async getDefaultMachine () {
       var vagrantHome = (!process.env.VAGRANT_HOME) ? '~/.vagrant.d' : process.env.VAGRANT_HOME
 
       const exec = require('child_process').exec
 
       let myFirstPromise = new Promise((resolve, reject) => {
-        exec('/usr/local/bin/vagrant global-status --prune', (stdout, stderr) => {
+        exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} global-status --prune`, (stdout, stderr) => {
         })
       })
       myFirstPromise.then(successMessage => {
@@ -50,10 +50,10 @@ export default {
 
       myFirstPromise = new Promise((resolve, reject) => {
         exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
-          console.log(`ssssssssssssssssssssss : ${stdout} ${stderr}`)
           var jsonParse = stderr.split('\n').join('<br />')
           this.posts = JSON.parse(jsonParse)['machines']
           EventBus.$emit('setVM', this.posts)
+          resolve()
           // console.log(this.$store)
           // this.$store.dispatch('saveMachines', this.$store)
         })
@@ -63,9 +63,9 @@ export default {
       })
     }
   },
-  created () {
-    // this.getDefaultMachine()
+  async created () {
     this.checkConfig()
+    await this.getDefaultMachine()
   }
 }
 </script>
