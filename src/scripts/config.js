@@ -17,6 +17,7 @@ config.getData = function () {
 }
 
 config.isConfigFileExists = () => {
+  console.log(dataPath)
   storage.setDataPath(dataPath)
   if (!fs.existsSync(path.join(dataPath, 'vagrantable.json'))) {
     if (!fs.existsSync(dataPath)) {
@@ -32,18 +33,19 @@ config.isConfigFileExists = () => {
 config.writeConfigFile = function (value) {
   storage.set(`${dataPath}`, value, function (error) {
     if (error) {
-      console.log(error)
+      console.log(`eeeee : ${error} ${value}`)
     }
   })
 }
 
 config.versionCheck = function (latest) {
+  console.log(`versionCheck ${latest}`)
   var data = this.data
   if (data.version !== latest.version) {
     data.version = latest.version
-    for (var key in latest) {
+    for (var key in latest.menu) {
       if (!data.hasOwnProperty(key)) {
-        data[key] = ''
+        data.menu[key] = latest.menu[key]
       }
     }
     this.setData(data)

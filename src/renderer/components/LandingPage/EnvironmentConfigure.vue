@@ -13,35 +13,29 @@
         <tr>
           <td style="width:60%;">
             <b-card style="padding:1%;">
-              <div v-for="post, key in ENV">
-                {{key}}
-                {{post}}
-                <b-form-input style="border-color: black;" v-model="ENV[key]" placeholder="Enter Vagrant Location">post</b-form-input>
+              <div v-for="post, key in Config.menu">
+                {{post.content.comments}}
+                <b-form-input style="border-color: black;" v-model=post.content.value>post</b-form-input>
               </div>
             </b-card>
           </td>
         </tr>
       </table>
-    <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
+    <md-button class="md-raised" v-on:click="Save()">Save</md-button>
     </span>
   </div>
 </template>
 
 <script>
+import config from '../../../scripts/config'
 import MenuStatus from '../assets/MachineStatus'
 const env = require('env-var')
 
 export default {
   components: { MenuStatus },
-  methods: {
-    Save: function () {
-      for (var key in this.ENV) {
-        env.get(key).default(this.ENV[key].asString())
-      }
-    }
-  },
   data () {
     return {
+      Config: {},
       BashCode: '',
       network: '',
       network_type: [
@@ -63,7 +57,23 @@ export default {
       }
     }
   },
+  methods: {
+    Save () {
+      // for (var key in this.ENV) {
+      //   env.get(key).default(this.ENV[key].asString())
+      // }
+      // alert(JSON.stringify(this.Config))
+      config.writeConfigFile(this.Config)
+      this.$store.dispatch('saveConfig', this.Config)
+    },
+    GetConfigure () {
+      // var config = Config.getConfig()
+      this.Config = this.$store.state.config
+      console.log(`TESTTEST ${JSON.stringify(this.Config)}`)
+    }
+  },
   created () {
+    this.GetConfigure()
     for (var key in this.ENV) {
       this.ENV[key] = env.get(key).asString()
     }
