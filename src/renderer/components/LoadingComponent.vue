@@ -28,7 +28,11 @@ export default {
         Config.readConfigFile()
         await Config.versionCheck(this.$store.state.config)
       }
-      this.$store.dispatch('saveConfig', Config.getData())
+
+      var config = await Config.getData()
+      await this.$store.dispatch('saveConfig', config)
+      console.log(`check config: ${JSON.stringify(config)} ${JSON.stringify(this.$store.state.config)}`)
+
       EventBus.$emit('completeLoading')
     },
     getDefaultMachine () {
@@ -37,7 +41,7 @@ export default {
       const exec = require('child_process').exec
 
       let myFirstPromise = new Promise((resolve, reject) => {
-        exec('vagrant global-status --prune', (stdout, stderr) => {
+        exec('/usr/local/bin/vagrant global-status --prune', (stdout, stderr) => {
         })
       })
       myFirstPromise.then(successMessage => {
@@ -60,7 +64,7 @@ export default {
     }
   },
   created () {
-    this.getDefaultMachine()
+    // this.getDefaultMachine()
     this.checkConfig()
   }
 }
