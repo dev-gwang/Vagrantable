@@ -1,22 +1,17 @@
   
 <template>
-  <div class="page-container" style="width:100%;padding-left:1%;background-color:white;">
-    <div id="main" style="visibility:hidden">
-      <vnt-header>
-        <span slot="subheader">Vagrant Box List</span>
-      </vnt-header>
+  <div>
+    <div style="display:none" id="main">
+      <h1>
+        Vagrant Box List
+      </h1>
       <hr>
-      <meta charset="UTF-8" />
-      <span>
-        <table style="width:100%;align-text:top;">
-          <tr>
-          <td style="width:100%;">
-            <b-card style="padding:1%;">
-              <span>
-                <b-form-input style="border-color: black;width:70%;" v-model="boxurl" placeholder="Enter Vagrant Location"></b-form-input>
-                <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>
-              </span>
-              <md-table>
+      <v-card style="padding:1%;">
+        <div>
+          <b-form-input style="border-color: black;width:70%;" v-model="boxurl" placeholder="Enter Vagrant Location"></b-form-input>
+          <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>
+        </div>
+         <md-table>
                 <md-table-row>
                   <md-table-head>Box Name</md-table-head>
                   <md-table-head>Provision</md-table-head>
@@ -30,13 +25,9 @@
                   <md-table-cell><md-button md-raised v-on:click="deleteBoxImage(post.name)">Delete</md-button></md-table-cell>
                 </md-table-row>
               </md-table>
-            </b-card>
-          </td>
-          </tr>
-        </table>
-      </span>
+      </v-card>
     </div>
-    <div class="text-center" id="progressbar">
+    <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
       Loading...
@@ -99,22 +90,20 @@ export default {
         } else {
           self.items = []
 
-          if (stdout.indexOf('There are no installed boxes')) {
-            var boxList = stdout.split('\n')
-            boxList.forEach(element => {
-              var content = element.replace('(', '').replace(',', '').replace(')', '').split(/\s+/)
-              if (content[0] === '') {
-                return true
-              }
-              self.items.push({
-                name: content[0],
-                provision: content[1],
-                version: content[2]
-              })
-              console.log(self.items)
+          // if (stdout.indexOf('There are no installed boxes')) {
+          var boxList = stdout.split('\n')
+          boxList.forEach(element => {
+            var content = element.replace('(', '').replace(',', '').replace(')', '').split(/\s+/)
+            if (content[0] === '') {
+              return true
+            }
+            self.items.push({
+              name: content[0],
+              provision: content[1],
+              version: content[2]
             })
-          }
-          document.getElementById('main').style.visibility = 'visible'
+          })
+          document.getElementById('main').style.display = 'block'
           document.getElementById('progressbar').style.visibility = 'hidden'
         }
       })
@@ -122,7 +111,8 @@ export default {
   },
   data () {
     return {
-      items: []
+      items: [],
+      table_category: ['Box Name', 'Provision', 'Version', 'Actions']
     }
   },
   created () {
