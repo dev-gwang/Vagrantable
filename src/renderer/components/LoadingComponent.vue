@@ -13,6 +13,7 @@
 <script>
 import Config from '../../scripts/config'
 import EventBus from '../store/eventBus'
+const log = require('electron-log')
 
 export default {
   data () {
@@ -22,7 +23,9 @@ export default {
   },
   methods: {
     async checkConfig () {
+      log.info('File not found')
       if (!Config.isConfigFileExists()) {
+        log.info('File not found')
         Config.writeConfigFile(this.$store.state.config)
       } else {
         Config.readConfigFile()
