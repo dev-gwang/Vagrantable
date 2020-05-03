@@ -14,6 +14,10 @@
           <b-form-input style="border-color: black;" v-model="location" placeholder="Enter Vagrant Location"></b-form-input>
         </div>
         <div>
+          Provider
+          <b-form-input style="border-color: black;" v-model="provider" placeholder="Enter Vagrant Provider"></b-form-input>
+        </div>
+        <div>
           Vagrant Box Lists <b-spinner id="loading" label="Spinning"></b-spinner><strong>{{ boxname }}</strong>
           <b-form-select style="border-color: black;" v-model="boxname" :options="countries"></b-form-select>
         </div>
@@ -88,7 +92,7 @@ export default {
         }
       }
       process.chdir(this.location)
-      var child = spawn('vagrant', ['up'])
+      var child = spawn(`${this.$store.state.config.menu.vagrant_binary_location.content.value}`, ['up', '--provider', self.provider])
 
       child.stdout.on('data', (data) => {
         EventBus.$emit('refreshVM')
@@ -143,7 +147,8 @@ export default {
       location: '',
       boxname: '',
       memory: 1024,
-      cpus: 1
+      cpus: 1,
+      provider: ''
     }
   },
   created () {
@@ -152,7 +157,7 @@ export default {
       this.countries = payload
     })
 
-    exec('vagrant box list', function (error, stdout, stderr) {
+    exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} box list`, function (error, stdout, stderr) {
       var result = []
       var arr = stdout.split('\n')
       for (var i = 0; i < arr.length - 1; i++) {

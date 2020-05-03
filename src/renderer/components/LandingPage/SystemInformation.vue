@@ -242,7 +242,7 @@
         })
       },
       stop: function (id) {
-        exec('vagrant halt ' + id, function (error, stdout, stderr) {
+        exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} halt ${id}`, function (error, stdout, stderr) {
           EventBus.$emit('addLogger', stdout)
 
           if (error !== null) {
@@ -254,7 +254,7 @@
       snapshotList: function () {
         this.value = 10
         const self = this
-        childProcess.exec('vagrant snapshot list ' + this.vagrant_id, function (error, stdout, stderr) {
+        childProcess.exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${this.vagrant_id}`, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
           }
@@ -278,7 +278,7 @@
       },
       doThis: function () {
         const self = this
-        childProcess.exec('vagrant port ' + this.vagrant_id + " | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'", function (error, stdout, stderr) {
+        childProcess.exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} port ${this.vagrant_id} | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'`, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
           }
@@ -291,7 +291,7 @@
       },
       doThis2: function () {
         const self = this
-        childProcess.exec('vagrant port ' + this.vagrant_id + " | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'", function (error, stdout, stderr) {
+        childProcess.exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} port this.vagrant_id | grep -v 'default' | grep -v 'The' | grep -v 'Vagrantfile' | grep -v 'provider'`, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
           }

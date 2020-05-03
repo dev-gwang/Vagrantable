@@ -11,10 +11,12 @@
           <md-card-header>
             <md-card-header-text style="display: flex;">
               <div v-if="post.state == 'running'"> 
-                <b-spinner variant="primary" label="Spinning"></b-spinner>
+               <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
+                <!-- <b-spinner variant="primary" label="Spinning"></b-spinner> -->
               </div>
               <div v-else> 
-                <b-spinner style="visibility: hidden;" label="Loading..." variant="light"></b-spinner>
+                
+                <!-- <b-spinner style="visibility: hidden;" label="Loading..." variant="dark"></b-spinner> -->
               </div>
               <div v-on:click="inform(post.local_data_path, key)">
                 <div>{{post.local_data_path}}</div>
@@ -58,7 +60,7 @@ export default {
       var exec = require('child_process').exec
       var arr = []
 
-      exec('vagrant box list', function (error, stdout, stderr) {
+      exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} box list`, function (error, stdout, stderr) {
         arr = stdout.split('\n')
         for (var i = 0; i < arr.length - 1; i++) {
           arr[i] = { text: arr[i].split(' ')[0], value: arr[i].split(' ')[0] }
