@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     async checkConfig () {
-      log.info('File not found')
+      process.env.PATH = process.env.PATH + ':/usr/local/bin'
       if (!Config.isConfigFileExists()) {
         log.info('File not found')
         Config.writeConfigFile(this.$store.state.config)
@@ -35,8 +35,6 @@ export default {
 
       var config = await Config.getData()
       await this.$store.dispatch('saveConfig', config)
-
-      EventBus.$emit('completeLoading')
     },
     async getDefaultMachine () {
       var vagrantHome = (!process.env.VAGRANT_HOME) ? '~/.vagrant.d' : process.env.VAGRANT_HOME
@@ -69,6 +67,7 @@ export default {
   async created () {
     this.checkConfig()
     await this.getDefaultMachine()
+    EventBus.$emit('completeLoading')
   }
 }
 </script>
