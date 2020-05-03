@@ -32,7 +32,7 @@ export default {
       // EventBus.$emit('SetSystemInformation', name, id)
     },
     configure: function (id) {
-      child = exec('vagrant snapshot list ' + id, function (error, stdout, stderr) {
+      child = exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${id}`, function (error, stdout, stderr) {
         EventBus.$emit('addSnapshot', stdout)
         if (error !== null) {
           console.log('exec error: ' + error)
