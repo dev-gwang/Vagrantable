@@ -1,12 +1,11 @@
   
 <template>
-  <div style="float:left;display:flex;">
-    <div style="display:none;width:90%;" id="main">
-       <div>
+  <div>
+    <div style="display:none" id="main">
+      <div>
         <h1>
           {{vagrant_name}}
         </h1>
-        <hr>
         <md-card-actions>
           <md-button v-on:click="start(vagrant_id)">Up</md-button>
           <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
@@ -16,15 +15,6 @@
           <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
         </md-card-actions>
       </div>
-      <div style="width:100%;float:left;display:flex;">
-        <div style="margin-top:2%;width:90%; height:100vh;z-index: 1;background-color:black;overflow-y:scroll;">
-          <!-- <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="overflow-y-auto" style="overflow:auto;height:70vh;width:100%;" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div> -->
-          <!-- <hr> -->
-        </div>
-      </div>
-    </div>
-    <!-- <div style="display:none" id="main">
-     
       <span style="width:100%;">
         <div style="width:5%;height:100vh;background-color:gray;">
         </div>
@@ -52,7 +42,7 @@
           <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
         </div>
       </span>
-    </div> -->
+    </div>
     <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
@@ -62,15 +52,12 @@
 </template>
 
 <script>
-  import MenuList from '../SystemInformation/Menu'
-  import Snapshot from '../SystemInformation/Snapshot'
   import EventBus from '../../store/eventBus'
   var childProcess = require('child_process')
   var spawn = require('child_process').spawn
   var exec = require('child_process').exec
 
   export default {
-    components: {MenuList, Snapshot},
     props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {
@@ -78,9 +65,7 @@
         ports: [],
         name: '',
         value: 0,
-        Vagrantfile: '',
-        payload: '',
-        currentComponent: ''
+        Vagrantfile: ''
       }
     },
     methods: {
@@ -319,25 +304,6 @@
       EventBus.$on('addSnapshot', (payload) => {
         this.SnapshotList = payload.split('\n')
       })
-
-      EventBus.$on('SetSystemInformationMain', (name, payload) => {
-        this.currentComponent = name
-        this.payload = payload
-        alert(name)
-      })
     }
   }
 </script>
-<style scoped>
-  #wrapper {
-    background:
-      radial-gradient(
-        ellipse at top left,
-        rgba(255, 255, 255, 1) 100%,
-        rgba(229, 229, 229, .9) 100%
-      );
-    height: 100%;
-    width: 100%;
-    float: left;
-  }
-</style>

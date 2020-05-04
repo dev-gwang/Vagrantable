@@ -50,7 +50,8 @@
     created () {
       EventBus.$on('addToast', (payload) => {
         this.message = payload
-        this.showSnackbar = true
+        this.makeToast(payload)
+        // this.showSnackbar = true
       })
       EventBus.$on('addLogger', (payload) => {
         if (payload.indexOf('\n') < 0) {
@@ -76,6 +77,13 @@
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
+      },
+      makeToast (variant = null) {
+        this.$bvToast.toast(variant, {
+          title: `Messages`,
+          toaster: 'b-toaster-bottom-right',
+          solid: true
+        })
       }
     }
   }
