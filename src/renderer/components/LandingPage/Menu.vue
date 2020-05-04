@@ -40,7 +40,7 @@
 
 <script>
 import EventBus from '../../store/eventBus'
-import MenuStatus from '../assets/MachineStatus'
+import MenuStatus from '../SystemInformation/Menu'
 
 export default {
   components: { MenuStatus },
