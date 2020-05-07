@@ -1,58 +1,23 @@
   
 <template>
-  <div style="float:left;display:flex;">
-    <div style="display:none;width:90%;" id="main">
-       <div>
-        <h1>
-          {{vagrant_name}}
-        </h1>
-        <hr>
-        <md-card-actions>
-          <md-button v-on:click="start(vagrant_id)">Up</md-button>
-          <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
-          <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
-          <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
-          <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
-          <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
-        </md-card-actions>
+  <div style="float:left;display:flex;width:100%;height:100%;" >
+    <menu-list style="height:70%;display:none;height:100%;" id="main_menu"></menu-list>
+    <div style="width:100%;display:none;" id="main">
+      <div style="width:100%;height:20%;">
+          <h1>
+            {{vagrant_name}}
+          </h1>
+          <md-card-actions>
+            <md-button v-on:click="start(vagrant_id)">Up</md-button>
+            <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
+            <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
+            <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
+            <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
+            <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
+          </md-card-actions>
       </div>
-      <div style="width:100%;float:left;display:flex;">
-        <div style="margin-top:2%;width:90%; height:100vh;z-index: 1;background-color:black;overflow-y:scroll;">
-          <!-- <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="overflow-y-auto" style="overflow:auto;height:70vh;width:100%;" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div> -->
-          <!-- <hr> -->
-        </div>
+            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrantName" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div>
       </div>
-    </div>
-    <!-- <div style="display:none" id="main">
-     
-      <span style="width:100%;">
-        <div style="width:5%;height:100vh;background-color:gray;">
-        </div>
-        <div style="width:90%;">
-          Snapshot List
-          <v-btn v-b-modal.modal-2 small color="primary" fab>+</v-btn>
-          <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
-          <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
-            <p class="my-4">Capture Snapshot</p>
-            <b-form-input v-model="snapshotName" placeholder="Enter your name"></b-form-input>
-          </b-modal>
-          <div>
-            <md-table>
-              <md-table-row>
-                <md-table-head>Snapshot Name</md-table-head>
-              </md-table-row>
-              <md-table-row v-for="post, key in SnapshotList" style="width:100%;">
-                <md-table-cell>{{post}}</md-table-cell>
-              </md-table-row>
-            </md-table>
-          </div>
-          <md-field>
-            <md-textarea style="height:100%;" md-counter="1000" rows="100" v-model="Vagrantfile"></md-textarea>
-          </md-field>
-          <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
-        </div>
-      </span>
-    </div> -->
     <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
@@ -135,8 +100,8 @@
         })
 
         child.on('close', function (code) {
-          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
           self.snapshotList()
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
         })
       },
       snapshotRemove: function (id, name) {
@@ -271,6 +236,7 @@
           self.value = 100
 
           document.getElementById('main').style.display = 'block'
+          document.getElementById('main_menu').style.display = 'block'
           document.getElementById('progressbar').style.display = 'none'
         })
       },
@@ -323,7 +289,6 @@
       EventBus.$on('SetSystemInformationMain', (name, payload) => {
         this.currentComponent = name
         this.payload = payload
-        alert(name)
       })
     }
   }

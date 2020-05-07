@@ -2,7 +2,6 @@
   <div id="wrapper">
     <main style="display: flex;height:100%;bottom:20px;">
       <menu-list style="height:100%;"></menu-list>
-      <menu-list-inform style="height:70%;"></menu-list-inform>
       <div style="margin-top:2%;width:90%; height:100%;z-index: 1;">
         <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="overflow-y-auto" style="overflow:auto;height:70vh;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
         <hr>
@@ -26,7 +25,6 @@
   import Information from './Information'
   import SystemInformation from './SystemInformation'
   import MenuList from './Menu'
-  import MenuListInform from '../SystemInformation/Menu'
   import MachineStatus from '../assets/MachineStatus'
   import EventBus from '../../store/eventBus'
   import NewMachine from './NewMachine'
@@ -37,7 +35,7 @@
 
   export default {
     name: 'landing-page',
-    components: { MenuListInform, StatusComponent, BoxList, MenuList, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
+    components: { StatusComponent, BoxList, MenuList, SystemInformation, MachineStatus, NewMachine, Information, EnvironmentConfigure, HistoryPage },
     data () {
       return {
         currentComponent: 'new-machine',

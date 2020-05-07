@@ -1,9 +1,10 @@
   
 <template>
-  <div class="page-container" style="width:10%;height:100vh;">
+  <div class="page-container" style="width:10%;height:100%;">
   <v-card
     class="mx-auto"
     max-width="300"
+    style="height:100%;"
     tile
   >
     <v-list flat>
