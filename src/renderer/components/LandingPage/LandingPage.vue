@@ -11,7 +11,7 @@
           </pre>
         </v-card>
       </div>
-      <md-snackbar style="background-color:#263238;" :md-position="position" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
+      <md-snackbar style="background-color:#263238;" :md-active.sync="showSnackbar" md-persistent>
         <span style="color:white;">{{ message }}</span>
       </md-snackbar>
     </main>

@@ -16,7 +16,7 @@
             <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
           </md-card-actions>
       </div>
-            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div>
+            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent"></div>
       </div>
     <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
@@ -40,6 +40,7 @@
     props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {
+        snapshot_name: '',
         SnapshotList: [],
         ports: [],
         name: '',
@@ -85,7 +86,7 @@
         var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
-        var name = `${this.snapshotName}-${dateString}`
+        var name = `${this.snapshot_name}-${dateString}`
 
         var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
         var pid = child.pid
@@ -218,6 +219,7 @@
       snapshotList: function () {
         this.value = 10
         const self = this
+        // alert(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${this.vagrant_id}`)
         childProcess.exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${this.vagrant_id}`, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)

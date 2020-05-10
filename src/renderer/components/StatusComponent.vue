@@ -4,7 +4,7 @@
     <md-menu md-direction="bottom-start">
       <md-button v-on:click="history()">Process {{counter}}</md-button>
     </md-menu>
-      <b-modal id="modal-1" @ok="handleOk">
+      <b-modal id="modal-1">
         <table>
         <tr><td>
           <b-card >

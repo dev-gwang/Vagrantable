@@ -75,7 +75,7 @@ export default {
       var self = this
       var dt = new Date()
       var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
-      var name = `${this.snapshotName}-${dateString}`
+      var name = `${this.snapshot_name}-${dateString}`
 
       var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
       var pid = child.pid
@@ -161,7 +161,6 @@ export default {
   },
   data () {
     return {
-      snapshot_list: 0,
       guis: ['true', 'false'],
       gui: '',
       BashCode: '',
