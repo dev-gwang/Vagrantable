@@ -18,7 +18,7 @@
       </div>
             <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent"></div>
       </div>
-    <div class="text-center" id="progressbar" style="margin-top:20%;">
+    <div class="text-center" id="progressbar" style="margin-top:20%;margin-left:50%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
       Loading...
@@ -91,7 +91,7 @@
         var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
         var pid = child.pid
 
-        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Add`})
 
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
@@ -103,7 +103,7 @@
 
         child.on('close', function (code) {
           self.snapshotList()
-          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
         })
       },
       snapshotRemove: function (id, name) {
@@ -111,7 +111,7 @@
         var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', `'${name}'`], {shell: true})
         var pid = child.pid
 
-        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 삭제`})
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Remove`})
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
         })
@@ -121,7 +121,7 @@
         })
 
         child.on('close', function (code) {
-          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
           self.snapshotList()
         })
       },
@@ -277,6 +277,7 @@
       this.doThis()
       this.readVagrantfile(this.vagrant_name)
       EventBus.$on('refreshInform', () => {
+        document.getElementById('main_menu').style.display = 'none'
         document.getElementById('main').style.display = 'none'
         document.getElementById('progressbar').style.display = 'block'
         this.doThis2()
