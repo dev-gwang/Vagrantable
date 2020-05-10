@@ -8,15 +8,15 @@
           <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
           <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
             <p class="my-4">Capture Snapshot</p>
-            <b-form-input v-model="snapshotName" placeholder="Enter your name"></b-form-input>
+            <b-form-input v-model="snapshot_name" placeholder="Enter your name"></b-form-input>
           </b-modal>
           <md-table>
             <md-table-row>
               <md-table-head>Snapshot Name</md-table-head>
             </md-table-row>
             <md-table-row v-for="post, key in snapshot_list" style="width:100%;">
-                <md-table-cell v-b-modal.modal-modify>
-                  <div style="width:100vh;" @click="modify(post)">
+                <md-table-cell >
+                  <div style="width:100vh;" @click="modify(post)" v-b-modal.modal-modify>
                   {{post}}
               </div>
               </md-table-cell>
@@ -107,7 +107,7 @@ export default {
       var self = this
       var dt = new Date()
       var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
-      var name = `${this.snapshotName}-${dateString}`
+      var name = `${this.snapshot_name}-${dateString}`
 
       var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
       var pid = child.pid
@@ -169,6 +169,7 @@ export default {
       child.on('close', function (code) {
         EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
         self.snapshotList()
+        this.$root.$emit('bv::show::modal', 'modal-modify', '#btnHide')
         this.$refs['modal-modify'].hide()
       })
     },
@@ -195,7 +196,6 @@ export default {
   data () {
     return {
       snapshot_name: '',
-      snapshot_list: 0,
       guis: ['true', 'false'],
       gui: '',
       BashCode: '',
