@@ -4,7 +4,6 @@
       <menu-list style="height:100%;"></menu-list>
       <div style="margin-top:2%;width:90%; height:100%;z-index: 1;">
         <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="overflow-y-auto" style="overflow:auto;height:70vh;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
-        <hr>
         <v-card ref="content" class="overflow-y-auto" style="height:20%; width:100%;overflow-y:scroll;bottom:20px;position: fixed;" id="logger">
           <pre  wrap="hard">
             {{Logger}}
