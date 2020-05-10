@@ -24,7 +24,7 @@
           <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
           <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
             <p class="my-4">Capture Snapshot</p>
-            <b-form-input v-model="snapshotName" placeholder="Enter your name"></b-form-input>
+            <b-form-input v-model="snapshot_name" placeholder="Enter your name"></b-form-input>
           </b-modal>
           <div>
             <md-table>
@@ -104,7 +104,7 @@
         var self = this
         var dt = new Date()
         var dateString = dt.getYear() + 1900 + '-' + dt.getMonth() + '-' + dt.getDate()
-        var name = `${this.snapshotName}-${dateString}`
+        var name = `${this.snapshot_name}-${dateString}`
 
         var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
         var pid = child.pid
@@ -129,7 +129,7 @@
         var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', `'${name}'`], {shell: true})
         var pid = child.pid
 
-        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 삭제`})
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Remove`})
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
         })

@@ -112,7 +112,7 @@ export default {
       var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
       var pid = child.pid
 
-      EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+      EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Add`})
 
       child.stdout.on('data', (data) => {
         EventBus.$emit('addLogger', data)
@@ -123,7 +123,7 @@ export default {
       })
 
       child.on('close', function (code) {
-        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
         self.snapshotList()
       })
     },
@@ -157,7 +157,7 @@ export default {
       var child = spawn('vagrant', ['snapshot', 'delete', '', id, '', `'${name}'`], {shell: true})
       var pid = child.pid
 
-      EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 삭제`})
+      EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Remove`})
       child.stdout.on('data', (data) => {
         EventBus.$emit('addLogger', data)
       })
@@ -167,7 +167,7 @@ export default {
       })
 
       child.on('close', function (code) {
-        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
         self.snapshotList()
         this.$root.$emit('bv::show::modal', 'modal-modify', '#btnHide')
         this.$refs['modal-modify'].hide()
