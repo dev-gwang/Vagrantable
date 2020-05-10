@@ -1,22 +1,23 @@
   
 <template>
   <div  >
-    <md-menu md-direction="bottom-start">
-      <md-button v-on:click="history()">Process {{counter}}</md-button>
-    </md-menu>
-      <b-modal id="modal-1">
-        <table>
-        <tr><td>
-          <b-card >
-              <div v-for="post, key in items" >
-                {{post.data}}
-                <b-button md-raised v-on:click="killProcess(post)">Kill</b-button>
-              </div>
-          </b-card>
-        </td>
-        </tr>
-      </table>
-      </b-modal>
+    <div class=".overline" v-on:click="history()">
+      Process {{counter}}
+    </div>
+   
+    <b-modal id="modal-1">
+      <table>
+      <tr><td>
+        <b-card >
+            <div v-for="post, key in items" >
+              {{post.data}}
+              <b-button md-raised v-on:click="killProcess(post)">Kill</b-button>
+            </div>
+        </b-card>
+      </td>
+      </tr>
+    </table>
+    </b-modal>
   </div>
 </template>
 
