@@ -16,7 +16,7 @@
             <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
           </md-card-actions>
       </div>
-            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrantName" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div>
+            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent" :swap-component="swapComponent"></div>
       </div>
     <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
@@ -29,13 +29,14 @@
 <script>
   import MenuList from '../SystemInformation/Menu'
   import Snapshot from '../SystemInformation/Snapshot'
+  import Vagrantfile from '../SystemInformation/Vagrantfile'
   import EventBus from '../../store/eventBus'
   var childProcess = require('child_process')
   var spawn = require('child_process').spawn
   var exec = require('child_process').exec
 
   export default {
-    components: {MenuList, Snapshot},
+    components: {MenuList, Snapshot, Vagrantfile},
     props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {

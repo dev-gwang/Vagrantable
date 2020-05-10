@@ -23,9 +23,10 @@
 <script>
 import EventBus from '../../store/eventBus'
 import MenuStatus from '../assets/MachineStatus'
+import Vagrantfile from './Vagrantfile'
 
 export default {
-  components: { MenuStatus },
+  components: { MenuStatus, Vagrantfile },
   methods: {
     inform (component) {
       EventBus.$emit('SetSystemInformationMain', component)
@@ -34,9 +35,8 @@ export default {
   data: () => ({
     item: 1,
     items: [
-      { text: 'Snapshot', icon: 'mdi-clock' },
-      { text: 'Audience', icon: 'mdi-account' },
-      { text: 'Conversions', icon: 'mdi-flag' }
+      { text: 'Vagrantfile', icon: 'mdi-clock' },
+      { text: 'Snapshot', icon: 'mdi-clock' }
     ]
   }),
   created () {

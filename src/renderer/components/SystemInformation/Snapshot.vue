@@ -5,7 +5,6 @@
     <span>
       <div>
         <div class="title">Snapshot List</div>
-        <v-btn v-b-modal.modal-2 small color="primary" fab>+</v-btn>
           <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
           <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
             <p class="my-4">Capture Snapshot</p>
@@ -16,11 +15,20 @@
               <md-table-head>Snapshot Name</md-table-head>
             </md-table-row>
             <md-table-row v-for="post, key in snapshot_list" style="width:100%;">
-              <md-table-cell>{{post}}</md-table-cell>
+                <md-table-cell v-b-modal.modal-modify>
+                  <div style="width:100vh;" @click="modify(post)">
+                  {{post}}
+              </div>
+              </md-table-cell>
             </md-table-row>
           </md-table>
         </div>
     </span>
+  <b-modal id="modal-modify" title="Snapshot Modify">
+     {{vagrant_id}} {{snapshot_name}}
+    <b-button variant="danger" @click="snapshotRemove(vagrant_id, snapshot_name)">Delete</b-button>
+  <b-button variant="success">Restore</b-button>
+  </b-modal>
   </div>
 </template>
 
@@ -30,12 +38,14 @@ import EventBus from '../../store/eventBus'
 var childProcess = require('child_process')
 
 var spawn = require('child_process').spawn
-var exec = require('child_process').exec
 
 export default {
   props: [ 'snapshot_list', 'vagrant_id' ],
   components: { MenuStatus },
   methods: {
+    modify: function (name) {
+      this.snapshot_name = name
+    },
     Save: function () {
       var self = this
       self.VagrantFileGenerator()
@@ -159,6 +169,7 @@ export default {
       child.on('close', function (code) {
         EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
         self.snapshotList()
+        this.$refs['modal-modify'].hide()
       })
     },
     snapshotRestore: function (id, name) {
@@ -183,6 +194,7 @@ export default {
   },
   data () {
     return {
+      snapshot_name: '',
       snapshot_list: 0,
       guis: ['true', 'false'],
       gui: '',
@@ -207,23 +219,6 @@ export default {
     }
   },
   created () {
-    var self = this
-    EventBus.$on('SetBoxList', (payload) => {
-      this.countries = payload
-    })
-
-    exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} box list`, function (error, stdout, stderr) {
-      var result = []
-      var arr = stdout.split('\n')
-      for (var i = 0; i < arr.length - 1; i++) {
-        result[i] = { text: arr[i].split(' ')[0], value: arr[i].split(' ')[0] }
-      }
-      if (error !== null) {
-        console.log(error)
-      }
-      self.countries = result
-      document.getElementById('loading').style.visibility = 'hidden'
-    })
   }
 }
 </script>
