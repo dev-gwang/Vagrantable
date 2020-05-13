@@ -71,7 +71,7 @@ export default {
     Save: function () {
       var self = this
       self.VagrantFileGenerator()
-      EventBus.$emit('addToast', `${this.location} Vagrant 시작`)
+      EventBus.$emit('addToast', `${this.location} Machine Start`)
       const fs = require('fs')
       try {
         fs.statSync(this.location)
