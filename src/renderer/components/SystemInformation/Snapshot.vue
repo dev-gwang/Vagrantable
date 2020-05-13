@@ -25,9 +25,9 @@
         </div>
     </span>
   <b-modal id="modal-modify" title="Snapshot Modify">
-     {{vagrant_id}} {{snapshot_name}}
+     {{snapshot_name}} <br>
     <b-button variant="danger" @click="snapshotRemove(vagrant_id, snapshot_name)">Delete</b-button>
-  <b-button variant="success">Restore</b-button>
+  <b-button variant="success" @click="snapshotRestore(vagrant_id, snapshot_name)">Restore</b-button>
   </b-modal>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
     Save: function () {
       var self = this
       self.VagrantFileGenerator()
-      EventBus.$emit('addToast', `${this.location} Vagrant 시작`)
+      EventBus.$emit('addToast', `${this.location} Vagrant Snapshot Save`)
       const fs = require('fs')
       try {
         fs.statSync(this.location)
