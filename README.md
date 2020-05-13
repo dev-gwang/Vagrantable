@@ -7,7 +7,6 @@ Vagrant 명령어를 기반으로 동작하며 Box 동작 가상 머신 실행 �
 
 
 ## 설치
----
 ### 1. Mac
 <details>
   <summary>Click to expand!</summary>
