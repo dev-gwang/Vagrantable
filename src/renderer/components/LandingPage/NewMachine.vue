@@ -51,8 +51,7 @@
           <b-form-input style="border-color: black;" v-model="network_bridge" placeholder="Enter Network Bridge"></b-form-input>
         </div>
         <div class="title">Shell Code (Bash)</div>
-          <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20"
-  max-rows="6"></b-form-textarea>
+          <b-form-textarea md-counter="1000" v-model="BashCode"  rows="20" max-rows="6"></b-form-textarea>
       </v-card>
     <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
     </span>
@@ -72,7 +71,7 @@ export default {
     Save: function () {
       var self = this
       self.VagrantFileGenerator()
-      EventBus.$emit('addToast', `${this.location} Vagrant 시작`)
+      EventBus.$emit('addToast', `${this.location} Machine Start`)
       const fs = require('fs')
       try {
         fs.statSync(this.location)
@@ -129,6 +128,9 @@ export default {
   },
   data () {
     return {
+      network_ip: '',
+      network_bridge: '',
+      vmname: '',
       guis: ['true', 'false'],
       gui: '',
       BashCode: '',

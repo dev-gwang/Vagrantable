@@ -4,14 +4,13 @@
       <menu-list style="height:100%;"></menu-list>
       <div style="margin-top:2%;width:90%; height:100%;z-index: 1;">
         <div v-bind:vagrant_id="vagrantId" v-bind:vagrant_name="vagrantName" class="overflow-y-auto" style="overflow:auto;height:70vh;width:100%;" :is="currentComponent" :swap-component="swapComponent"></div>
-        <hr>
         <v-card ref="content" class="overflow-y-auto" style="height:20%; width:100%;overflow-y:scroll;bottom:20px;position: fixed;" id="logger">
           <pre  wrap="hard">
             {{Logger}}
           </pre>
         </v-card>
       </div>
-      <md-snackbar style="background-color:#263238;" :md-position="position" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
+      <md-snackbar style="background-color:#263238;" :md-active.sync="showSnackbar" md-persistent>
         <span style="color:white;">{{ message }}</span>
       </md-snackbar>
     </main>
@@ -50,7 +49,8 @@
     created () {
       EventBus.$on('addToast', (payload) => {
         this.message = payload
-        this.showSnackbar = true
+        this.makeToast(payload)
+        // this.showSnackbar = true
       })
       EventBus.$on('addLogger', (payload) => {
         if (payload.indexOf('\n') < 0) {
@@ -76,6 +76,13 @@
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
+      },
+      makeToast (variant = null) {
+        this.$bvToast.toast(variant, {
+          title: `Messages`,
+          toaster: 'b-toaster-bottom-right',
+          solid: true
+        })
       }
     }
   }

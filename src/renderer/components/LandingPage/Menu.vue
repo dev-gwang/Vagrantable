@@ -11,12 +11,10 @@
           <md-card-header>
             <md-card-header-text style="display: flex;">
               <div v-if="post.state == 'running'"> 
-               <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
-                <!-- <b-spinner variant="primary" label="Spinning"></b-spinner> -->
+               <b-spinner variant="success" label="Spinning"></b-spinner>
               </div>
               <div v-else> 
-                
-                <!-- <b-spinner style="visibility: hidden;" label="Loading..." variant="dark"></b-spinner> -->
+                <b-spinner style="visibility: hidden;" label="Loading..." variant="dark"></b-spinner>
               </div>
               <div v-on:click="inform(post.local_data_path, key)">
                 <div>{{post.local_data_path}}</div>
@@ -42,7 +40,7 @@
 
 <script>
 import EventBus from '../../store/eventBus'
-import MenuStatus from '../assets/MachineStatus'
+import MenuStatus from '../SystemInformation/Menu'
 
 export default {
   components: { MenuStatus },
@@ -81,7 +79,8 @@ export default {
   },
   data () {
     return {
-      posts: []
+      posts: [],
+      isSystem: false
     }
   },
   created () {

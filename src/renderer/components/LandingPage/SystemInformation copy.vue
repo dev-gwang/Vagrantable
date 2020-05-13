@@ -1,24 +1,49 @@
   
 <template>
-  <div style="float:left;display:flex;width:100%;height:100%;" >
-    <menu-list style="height:70%;display:none;height:100%;" id="main_menu"></menu-list>
-    <div style="width:100%;display:none;" id="main">
-      <div style="width:100%;height:20%;">
-          <h1>
-            {{vagrant_name}}
-          </h1>
-          <md-card-actions>
-            <md-button v-on:click="start(vagrant_id)">Up</md-button>
-            <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
-            <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
-            <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
-            <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
-            <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
-          </md-card-actions>
+  <div>
+    <div style="display:none" id="main">
+      <div>
+        <h1>
+          {{vagrant_name}}
+        </h1>
+        <md-card-actions>
+          <md-button v-on:click="start(vagrant_id)">Up</md-button>
+          <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
+          <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
+          <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
+          <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
+          <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
+        </md-card-actions>
       </div>
-            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent"></div>
-      </div>
-    <div class="text-center" id="progressbar" style="margin-top:20%;margin-left:50%;">
+      <span style="width:100%;">
+        <div style="width:5%;height:100vh;background-color:gray;">
+        </div>
+        <div style="width:90%;">
+          Snapshot List
+          <v-btn v-b-modal.modal-2 small color="primary" fab>+</v-btn>
+          <b-button v-b-modal.modal-2>Capture Snapshot</b-button>
+          <b-modal id="modal-2" title="BootstrapVue" @ok="handleOk">
+            <p class="my-4">Capture Snapshot</p>
+            <b-form-input v-model="snapshot_name" placeholder="Enter your name"></b-form-input>
+          </b-modal>
+          <div>
+            <md-table>
+              <md-table-row>
+                <md-table-head>Snapshot Name</md-table-head>
+              </md-table-row>
+              <md-table-row v-for="post, key in SnapshotList" style="width:100%;">
+                <md-table-cell>{{post}}</md-table-cell>
+              </md-table-row>
+            </md-table>
+          </div>
+          <md-field>
+            <md-textarea style="height:100%;" md-counter="1000" rows="100" v-model="Vagrantfile"></md-textarea>
+          </md-field>
+          <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
+        </div>
+      </span>
+    </div>
+    <div class="text-center" id="progressbar" style="margin-top:20%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
       Loading...
@@ -27,27 +52,20 @@
 </template>
 
 <script>
-  import MenuList from '../SystemInformation/Menu'
-  import Snapshot from '../SystemInformation/Snapshot'
-  import Vagrantfile from '../SystemInformation/Vagrantfile'
   import EventBus from '../../store/eventBus'
   var childProcess = require('child_process')
   var spawn = require('child_process').spawn
   var exec = require('child_process').exec
 
   export default {
-    components: {MenuList, Snapshot, Vagrantfile},
     props: ['vagrant_name', 'vagrant_id'],
     data () {
       return {
-        snapshot_name: '',
         SnapshotList: [],
         ports: [],
         name: '',
         value: 0,
-        Vagrantfile: '',
-        payload: '',
-        currentComponent: ''
+        Vagrantfile: ''
       }
     },
     methods: {
@@ -91,7 +109,7 @@
         var child = spawn('vagrant', ['snapshot', 'save', this.vagrant_id, `'${name}'`], {shell: true})
         var pid = child.pid
 
-        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Add`})
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
 
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
@@ -102,8 +120,8 @@
         })
 
         child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
           self.snapshotList()
-          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
         })
       },
       snapshotRemove: function (id, name) {
@@ -121,7 +139,7 @@
         })
 
         child.on('close', function (code) {
-          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
           self.snapshotList()
         })
       },
@@ -219,7 +237,6 @@
       snapshotList: function () {
         this.value = 10
         const self = this
-        // alert(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${this.vagrant_id}`)
         childProcess.exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} snapshot list ${this.vagrant_id}`, function (error, stdout, stderr) {
           if (error !== null) {
             EventBus.$emit('addLogger', stderr)
@@ -239,7 +256,6 @@
           self.value = 100
 
           document.getElementById('main').style.display = 'block'
-          document.getElementById('main_menu').style.display = 'block'
           document.getElementById('progressbar').style.display = 'none'
         })
       },
@@ -277,7 +293,6 @@
       this.doThis()
       this.readVagrantfile(this.vagrant_name)
       EventBus.$on('refreshInform', () => {
-        document.getElementById('main_menu').style.display = 'none'
         document.getElementById('main').style.display = 'none'
         document.getElementById('progressbar').style.display = 'block'
         this.doThis2()
@@ -289,24 +304,6 @@
       EventBus.$on('addSnapshot', (payload) => {
         this.SnapshotList = payload.split('\n')
       })
-
-      EventBus.$on('SetSystemInformationMain', (name, payload) => {
-        this.currentComponent = name
-        this.payload = payload
-      })
     }
   }
 </script>
-<style scoped>
-  #wrapper {
-    background:
-      radial-gradient(
-        ellipse at top left,
-        rgba(255, 255, 255, 1) 100%,
-        rgba(229, 229, 229, .9) 100%
-      );
-    height: 100%;
-    width: 100%;
-    float: left;
-  }
-</style>

@@ -1,10 +1,10 @@
   
 <template>
-  <div style="width:100%;background-color:#3498db; margin:0%; padding:0%;"  >
-    <md-menu md-direction="bottom-start">
-      <md-button v-on:click="history()">Process {{counter}}</md-button>
-    </md-menu>
-      <b-modal id="modal-1" @ok="handleOk">
+  <div style="width:100%;background-color:#3498db; margin:0%; padding:0%;width:100%;"  >
+    <div class=".overline" v-on:click="history()">
+      Process {{counter}}
+    </div>
+      <b-modal id="modal-1">
         <table style="width:100%;align-text:top;">
         <tr><td style="width:100%;">
           <b-card style="padding:1%;">
