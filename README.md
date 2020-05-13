@@ -17,9 +17,6 @@ Vagrant 명령어를 기반으로 동작하며 Box 동작 가상 머신 실행 �
      * 링크 : [Release Link](https://github.com/gwangildev/Vagrantable/releases)
   2. 설치
      * 다운 받은 패키지 파일 실행
-     * 실행 파일 옮기기
-    ![이미지 이름](./assets/README_vagrantable_install.png)
-     * 끝
 </details>
 
 ---
