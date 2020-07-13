@@ -39,7 +39,7 @@
           <md-field>
             <md-textarea style="height:100%;" md-counter="1000" rows="100" v-model="Vagrantfile"></md-textarea>
           </md-field>
-          <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
+          <md-button class="md-raised" v-on:click="Save()">Save</md-button>
         </div>
       </span>
     </div>

@@ -38,19 +38,19 @@ export default {
     },
     async getDefaultMachine () {
       var vagrantHome = (!process.env.VAGRANT_HOME) ? '~/.vagrant.d' : process.env.VAGRANT_HOME
-
       const exec = require('child_process').exec
+      require('child_process').execSync(`vagrant global-status --prune`)
       let myFirstPromise = new Promise((resolve, reject) => {
-        exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} global-status --prune`, (stdout, stderr) => {
-          exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
-            var jsonParse = stderr.split('\n').join('<br />')
-            this.posts = JSON.parse(jsonParse)['machines']
-            EventBus.$emit('setVM', this.posts)
-            resolve()
-            // console.log(this.$store)
-            // this.$store.dispatch('saveMachines', this.$store)
-          })
+      // exec(`${this.$store.state.config.menu.vagrant_binary_location.content.value} global-status --prune`, (stdout, stderr) => {
+        exec('cat ' + vagrantHome + '/data/machine-index/index', (stdout, stderr) => {
+          var jsonParse = stderr.split('\n').join('<br />')
+          this.posts = JSON.parse(jsonParse)['machines']
+          EventBus.$emit('setVM', this.posts)
+          resolve()
+          // console.log(this.$store)
+          // this.$store.dispatch('saveMachines', this.$store)
         })
+      // })
       })
       myFirstPromise.then(successMessage => {
         console.log(successMessage)
