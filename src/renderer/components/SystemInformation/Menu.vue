@@ -1,6 +1,6 @@
   
 <template>
-  <div class="page-container" style="width:10%;height:100%;">
+  <div class="page-container" style="width:20%;height:100%;">
   <v-card
     class="mx-auto"
     max-width="300"
