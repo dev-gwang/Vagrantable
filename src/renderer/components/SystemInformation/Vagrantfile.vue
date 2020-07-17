@@ -34,7 +34,6 @@ export default {
       process.chdir(location)
 
       var child = spawn('vagrant', ['validate'], {shell: true})
-      var pid = child.pid
 
       child.stdout.on('data', (data) => {
         EventBus.$emit('addLogger', data)
@@ -45,7 +44,6 @@ export default {
       })
 
       child.on('close', function (code) {
-        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
       })
     },
     readVagrantfile (location) {
