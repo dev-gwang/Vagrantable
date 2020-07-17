@@ -1,13 +1,13 @@
   
 <template>
-  <div class="page-container" style="width:100%;padding-left:1%;">
+  <div class="page-container" style="width:100%;height:70%;padding-left:1%;">
     <h1>
         NEW
     </h1>
     <hr>
     <meta charset="UTF-8"/>
     <span>
-      <v-card>
+      <v-card class="overflow-y-auto;">
         <div class="title">Basic</div>
         <div>
           Vagrant Location

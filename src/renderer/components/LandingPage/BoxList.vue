@@ -2,11 +2,13 @@
 <template>
   <div>
     <div style="display:none;height:100%;" id="main">
-      <h1>
-        Vagrant Box List
-      </h1>
+      <div style="width:100%;height:20%;float:flex;">
+        <h1>
+          Vagrant Box List
+        </h1>
+      </div>
       <hr>
-      <v-card style="padding:1%;">
+      <v-card style="padding:1%;" class="overflow-y-auto">
         <div>
           <b-form-input style="border-color: black;width:70%;float:left;" v-model="boxurl" placeholder="Enter Vagrant Box Name"></b-form-input>
           <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>

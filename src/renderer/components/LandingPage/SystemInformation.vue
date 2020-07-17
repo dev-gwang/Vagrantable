@@ -1,23 +1,32 @@
   
 <template>
-  <div style="float:left;display:flex;width:100%;height:100%;" >
-    <menu-list style="height:70%;display:none;height:100%;" id="main_menu"></menu-list>
-    <div style="width:100%;display:none;" id="main">
-      <div style="width:100%;height:20%;">
-          <h1>
-            {{vagrant_name}}
-          </h1>
-          <md-card-actions>
-            <md-button v-on:click="start(vagrant_id)">Up</md-button>
-            <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
-            <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
-            <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
-            <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
-            <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
-          </md-card-actions>
+  <div style="float:left;display:flex;width:100%;height:70%;overflow: hidden" >
+    <div style="width:100%;display:none;float:flex;overflow: hidden" id="main">
+      <div style="width:100%;height:20%;float:flex;">
+        <h1>
+          {{vagrant_name}}
+        </h1>
+        <md-card-actions>
+          <md-button v-on:click="start(vagrant_id)">Up</md-button>
+          <md-button v-on:click="stop(vagrant_id)">Halt</md-button>
+          <md-button v-on:click="reload(vagrant_id)">Reload</md-button>
+          <md-button v-on:click="provision(vagrant_id)">Provision</md-button>
+          <md-button v-on:click="remove(vagrant_id)">Destroy</md-button>
+          <md-button v-on:click="updateBoxImage(vagrant_id)">Update</md-button>
+        </md-card-actions>
       </div>
-            <div v-bind:vagrant_id="vagrant_id" v-bind:snapshot_list="SnapshotList" v-bind:vagrant_name="vagrant_name" style="width:100%;height:80%;overflow:auto" :payload="payload" :is="currentComponent"></div>
+      <div style="width:100%;float:left;height:100%;">
+        <menu-list style="float:left;height:70%;display:none;height:100%;" id="main_menu"></menu-list>
+        <div 
+          v-bind:vagrant_id="vagrant_id" 
+          v-bind:snapshot_list="SnapshotList" 
+          v-bind:vagrant_name="vagrant_name" 
+          style="width:100%;height:70%;overflow:auto;width:80%;" 
+          :payload="payload" 
+          :is="currentComponent"> 
+        </div>
       </div>
+    </div>
     <div class="text-center" id="progressbar" style="margin-top:20%;margin-left:50%;">
       <b-spinner type="grow" label="Spinning"></b-spinner>
       <br>
@@ -172,6 +181,10 @@
         })
         child.stderr.on('data', (data) => {
           EventBus.$emit('addLogger', data)
+        })
+
+        child.on('close', function (code) {
+          EventBus.$emit('swapComponent', 'new-machine', 1)
         })
       },
       reload: function (id) {

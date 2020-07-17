@@ -8,7 +8,6 @@
     tile
   >
     <v-list flat>
-      <v-subheader>SUB MENU</v-subheader>
       <b-list-group 
         v-for="(item, i) in items"
         :key="i"
@@ -61,6 +60,7 @@ export default {
     console.log(JSON.stringify(this.$store.machine))
     this.posts = this.$store.machine
     console.log(`test ${JSON.stringify(this.posts)}`)
+    this.inform('Vagrantfile')
 
     // const exec = require('child_process').exec
 
