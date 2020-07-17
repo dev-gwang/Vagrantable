@@ -1,14 +1,14 @@
   
 <template>
   <div>
-    <div style="display:none" id="main">
+    <div style="display:none;height:100%;" id="main">
       <h1>
         Vagrant Box List
       </h1>
       <hr>
       <v-card style="padding:1%;">
         <div>
-          <b-form-input style="border-color: black;width:70%;" v-model="boxurl" placeholder="Enter Vagrant Location"></b-form-input>
+          <b-form-input style="border-color: black;width:70%;float:left;" v-model="boxurl" placeholder="Enter Vagrant Box Name"></b-form-input>
           <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>
         </div>
          <md-table>
@@ -46,6 +46,11 @@ export default {
   components: { MenuStatus },
   methods: {
     SaveBox (url) {
+      if (!url) {
+        alert('Please Insert Vagrant Box Name')
+        return
+      }
+
       var self = this
       var command = ['box', 'add', url, '--provider', 'virtualbox']
       var child = spawn('vagrant', command)
