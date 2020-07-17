@@ -21,17 +21,18 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    minWidth: 1000,
-    minHeight: 800,
+    maxHeight: 800,
+    maxWidth: 1500,
     height: 800,
     width: 1500,
     autoHideMenuBar: true,
-    titleBarStyle: 'customButtonsOnHover',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
     },
-    frame: false
+    frame: false,
+    maximizable: false,
+    resizable: false
   })
   mainWindow.loadURL(winURL)
 
