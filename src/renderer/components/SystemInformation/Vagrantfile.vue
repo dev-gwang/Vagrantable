@@ -7,11 +7,7 @@
       placeholder="Enter something..."
       rows="20"
     ></b-form-textarea>
-    <!-- <md-field>
-      <md-textarea style="height:100%;" md-counter="3000" rows="300" v-model="Vagrantfile"></md-textarea>
-    </md-field> -->
-          <md-button class="md-raised" v-on:click="Save()">Save And Start</md-button>
-
+    <md-button class="md-raised" v-on:click="Save()">Save</md-button>
   </div>
 </template>
 
@@ -27,13 +23,29 @@ export default {
   props: [ 'snapshot_list', 'vagrant_id', 'vagrant_name' ],
   components: { MenuStatus },
   methods: {
-    Save: function () {
+    Save: async function () {
       var self = this
       const fs = require('fs')
       var location = self.vagrant_name
 
-      fs.writeFile(`${location.replace('/.vagrant', '')}/Vagrantfile`, this.Vagrantfile, 'utf8', function (error) {
+      await fs.writeFile(`${location.replace('/.vagrant', '')}/Vagrantfile`, this.Vagrantfile, 'utf8', function (error) {
         console.log(error)
+      })
+      process.chdir(location)
+
+      var child = spawn('vagrant', ['validate'], {shell: true})
+      var pid = child.pid
+
+      child.stdout.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
+      })
+
+      child.stderr.on('data', (data) => {
+        EventBus.$emit('addLogger', data)
+      })
+
+      child.on('close', function (code) {
+        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot Add`})
       })
     },
     readVagrantfile (location) {
