@@ -6,27 +6,19 @@
         <h1>
           Vagrant Box List
         </h1>
+        <hr>
       </div>
-      <hr>
-      <v-card style="padding:1%;" class="overflow-y-auto">
+      <v-card  class="overflow-y-auto">
         <div>
-          <b-form-input style="border-color: black;width:70%;float:left;" v-model="boxurl" placeholder="Enter Vagrant Box Name"></b-form-input>
-          <md-button class="md-raised" v-on:click="SaveBox(boxurl)">Box Add</md-button>
+          <b-form-input style="border-color: black;width:90%;float:left;" v-model="boxurl" placeholder="Enter Vagrant Box Name"></b-form-input>
+          &nbsp
+          <b-button style="width:8%;" v-on:click="SaveBox(boxurl)">Box Add</b-button>
         </div>
-         <md-table>
-                <md-table-row>
-                  <md-table-head>Box Name</md-table-head>
-                  <md-table-head>Provision</md-table-head>
-                  <md-table-head>Version</md-table-head>
-                  <md-table-head>Actions</md-table-head>
-                </md-table-row>
-                <md-table-row v-for="post, key in items" style="width:100%;">
-                  <md-table-cell>{{post.name}}</md-table-cell>
-                  <md-table-cell>{{post.provision}}</md-table-cell>
-                  <md-table-cell>{{post.version}}</md-table-cell>
-                  <md-table-cell><md-button md-raised v-on:click="deleteBoxImage(post.name)">Delete</md-button></md-table-cell>
-                </md-table-row>
-              </md-table>
+        <b-table striped hover :items="items">
+          <template v-slot:cell(action)="data">
+            <b-button v-on:click="deleteBoxImage(data.value)">Delete</b-button>
+          </template>
+        </b-table>
       </v-card>
     </div>
     <div class="text-center" id="progressbar" style="margin-top:20%;">
@@ -107,7 +99,8 @@ export default {
             self.items.push({
               name: content[0],
               provision: content[1],
-              version: content[2]
+              version: content[2],
+              action: content[0]
             })
           })
           document.getElementById('main').style.display = 'block'
