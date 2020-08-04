@@ -26,6 +26,7 @@ function createWindow () {
     height: 800,
     width: 1500,
     autoHideMenuBar: true,
+    titleBarStyle: 'customButtonsOnHover',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
