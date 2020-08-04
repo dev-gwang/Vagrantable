@@ -15,7 +15,7 @@
         </div>
         <div>
           Provider
-          <b-form-input style="border-color: black;" v-model="provider" placeholder="Enter Vagrant Provider"></b-form-input>
+          <b-form-select style="border-color: black;" v-model="provider" :options="providers"></b-form-select>
         </div>
         <div>
           Vagrant Box Lists <b-spinner id="loading" label="Spinning"></b-spinner><strong>{{ boxname }}</strong>
@@ -24,20 +24,21 @@
         <div style="display: flex;">
           <div style="width:24%;margin-right:1%;">
             CPUS
-            <b-form-input style="border-color: black;" v-model="cpus" placeholder="Enter CPUs"></b-form-input>
+            <b-form-select style="border-color: black;" v-model="cpu" :options="cpus"></b-form-select>
           </div>
           <div style="width:24%;margin-right:1%;">
             Memory (MB)
-            <b-form-input style="border-color: black;" v-model="memory" placeholder="Enter Memory"></b-form-input>
+            
+            <b-form-select style="border-color: black;" v-model="memory" :options="memory_list"></b-form-select>
           </div>
           <div style="width:24%;margin-right:1%;">
             GUI
             <b-form-select style="border-color: black;" v-model="gui" :options="guis"></b-form-select>
           </div>
-          <div style="width:25%;">
+          <!-- <div style="width:25%;">
             VM Name
             <b-form-input style="border-color: black;" v-model="vmname" placeholder="Enter VM Name"></b-form-input>
-          </div>
+          </div> -->
         </div>
         <div class="title">Network</div>
         <div>
@@ -112,9 +113,8 @@ export default {
       config.vm.network "${this.network}", ip: "${this.network_ip}", bridge: "${this.network_bridge}"
       config.vm.provider "virtualbox" do |vb|
         vb.memory = ${this.memory}
-        vb.cpus = ${this.cpus}
+        vb.cpus = ${this.cpu}
         vb.gui = ${this.gui}
-        vb.name = "${this.vmname}"
       end
       config.vm.provision "shell", inline: <<-SHELL
         ${this.BashCode}
@@ -132,6 +132,8 @@ export default {
       network_bridge: '',
       vmname: '',
       guis: ['true', 'false'],
+      cpus: [1, 2, 3, 4, 5, 6],
+      memory_list: [512, 1024, 2048, 4096, 8192],
       gui: '',
       BashCode: '',
       network: '',
@@ -149,8 +151,7 @@ export default {
       location: '',
       boxname: '',
       memory: 1024,
-      cpus: 1,
-      provider: ''
+      providers: ['virtualbox']
     }
   },
   created () {
