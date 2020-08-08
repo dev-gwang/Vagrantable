@@ -63,8 +63,19 @@
 import MenuStatus from '../assets/MachineStatus'
 import EventBus from '../../store/eventBus'
 
+const fs = require('fs')
 var spawn = require('child_process').spawn
 var exec = require('child_process').exec
+
+function isDir (path) {
+  try {
+    var stat = fs.lstatSync(path)
+    return stat.isDirectory()
+  } catch (e) {
+    // lstatSync throws an error if path doesn't exist
+    return false
+  }
+}
 
 export default {
   components: { MenuStatus },
@@ -73,7 +84,11 @@ export default {
       var self = this
       self.VagrantFileGenerator()
       EventBus.$emit('addToast', `${this.location} Machine Start`)
-      const fs = require('fs')
+
+      if (!isDir(this.location)) {
+        fs.mkdirSync(this.location)
+      }
+
       try {
         fs.statSync(this.location)
         console.log('file or directory exists')
@@ -87,7 +102,6 @@ export default {
         })
       } catch (err) {
         if (err.code === 'ENOENT') {
-          fs.mkdir(this.location)
           console.log('file or directory does not exist')
         }
       }
