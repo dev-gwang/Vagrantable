@@ -80,8 +80,17 @@ function isDir (path) {
 export default {
   components: { MenuStatus },
   methods: {
+    Check: function () {
+      if (!this.boxname || !this.network || !this.network_ip || !this.network_bridge || !this.memory || !this.cpu || !this.gui) {
+        alert('Please enter all blanks.')
+        return 0
+      }
+    },
     Save: function () {
       var self = this
+      if (!self.Check()) {
+        return 0
+      }
       self.VagrantFileGenerator()
       EventBus.$emit('addToast', `${this.location} Machine Start`)
 
@@ -107,6 +116,9 @@ export default {
       }
       process.chdir(this.location)
       var child = spawn(`${this.$store.state.config.menu.vagrant_binary_location.content.value}`, ['up', '--provider', self.provider])
+      var pid = child.pid
+
+      EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Snapshot Remove`})
 
       child.stdout.on('data', (data) => {
         EventBus.$emit('refreshVM')
@@ -114,6 +126,11 @@ export default {
       })
       child.stderr.on('data', (data) => {
         EventBus.$emit('addLogger', data)
+      })
+
+      child.on('close', function (code) {
+        EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Snapshot 추가`})
+        self.snapshotList()
       })
     },
     VagrantFileGenerator: function () {
@@ -147,6 +164,7 @@ export default {
       vmname: '',
       guis: ['true', 'false'],
       cpus: [1, 2, 3, 4, 5, 6],
+      cpu: 1,
       memory_list: [512, 1024, 2048, 4096, 8192],
       gui: '',
       BashCode: '',
@@ -165,7 +183,8 @@ export default {
       location: '',
       boxname: '',
       memory: 1024,
-      providers: ['virtualbox']
+      providers: ['virtualbox'],
+      provider: ''
     }
   },
   created () {
