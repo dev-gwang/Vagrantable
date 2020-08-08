@@ -174,6 +174,9 @@
       },
       remove: function (id) {
         var child = spawn('vagrant', ['destroy', '-f', id])
+        var pid = child.pid
+
+        EventBus.$emit('addHistory', {'child': pid, 'data': `${name} Destroy`})
 
         child.stdout.on('data', (data) => {
           EventBus.$emit('addLogger', data)
@@ -184,6 +187,7 @@
         })
 
         child.on('close', function (code) {
+          EventBus.$emit('removeHistory', {'child': pid, 'data': `${name} Destroy`})
           EventBus.$emit('swapComponent', 'new-machine', 1)
         })
       },
